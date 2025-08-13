@@ -1,0 +1,111 @@
+    html, body {
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    .sidebar {
+      height: 100vh;
+      overflow-y: auto;
+      background-color: #343a40;
+      color: #fff;
+      padding: 20px;
+    }
+    .sidebar h1 {
+      font-size: 24px;
+      font-weight: 900;
+      color: #f8f9fa;
+    }
+    .sidebar hr {
+      border-color: #6c757d;
+    }
+    .sidebar a {
+      color: #f8f9fa;
+      text-decoration: none;
+    }
+    .sidebar .nav-link:hover {
+      color : white;
+      background-color: #495057;
+      border-radius: 5px;
+    }
+    .sidebar .collapse .nav-link {
+      font-size: 14px;
+    }
+    .content {
+      flex-grow: 1;
+      padding: 20px;
+    }
+    
+    .content{
+        padding-top: 6%;
+        padding-left: 22%;
+        padding-right: 2%;
+    }
+    
+    .defaultHeader{
+      	width: 83%; 
+      	position: fixed;
+        top: 0;
+        left: 50;
+        right: 0;
+        z-index: 1030; /* higher than sidebar if needed */
+        background-color: white; /* or your theme */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);      
+    }
+    
+    .sideNavBar{
+      width: 20%; 
+      position: fixed;
+    }
+    
+	div.dataTables_wrapper div.dataTables_length {
+	    float: left; /* Align the length menu to the left */
+	    margin-right: 20px; /* Add some spacing if needed */
+	}
+	
+	div.dataTables_wrapper div.dataTables_filter {
+	    float: right; /* Keep the search box on the right */
+	}
+	
+	/* Adjust the width of the page length select box */
+	.dataTables_length select {
+	    width: 150px; /* Set the desired width */
+	}
+    
+    .pageHeader{
+      background-color : #343a40;
+    }
+    
+	.tt-menu {
+	    width: 100%;
+	    background-color: #fff;
+	    border: 1px solid #ccc;
+	    border-radius: 0.25rem;
+	    z-index: 1050;
+	}
+	
+	.tt-suggestion {
+	    padding: 0.5rem;
+	    cursor: pointer;
+	}
+	
+	.tt-suggestion:hover {
+	    background-color: #f8f9fa;
+	}    
+
+	/* Media query for smaller screens */
+	@media (max-width: 768px) {
+	    .content-box-header {
+	        flex-direction: column;
+	        align-items: flex-start;
+	    }
+	
+	    .dropdown-container {
+	        margin-bottom: 10px; /* Adjust the margin as needed */
+	    }
+	} 

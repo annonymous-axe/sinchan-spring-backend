@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.title"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <script src="https://kit.fontawesome.com/2fd82847eb.js" crossorigin="anonymous"></script>
+    
+   	<!-- Google Fonts: Poppins -->
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+<!-- Add the Bootstrap theme CSS after Select2 CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />    
+<!--     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" /> -->
+<!--     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" /> -->
+    <!-- Or for RTL support -->
+<!--     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />    -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/custome-css.css}">
+    <link rel="stylesheet" th:href="@{/css/custome-select2-design.css}">
+</head>
+<body>
+
+    <div class="layout">
+        <div class="item" th:insert="~{layout/defaultHeader :: header}"></div>
+        <div class="item" th:insert="~{layout/defaultMenu :: sideBar}"></div>
+        <div class="item">
+
+            <div class="content container-fluid">
+            
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <h5 class="title"><b data-i18n="app.master.farmer.farmer.title"></b></h5>
+                                <p ><span data-i18n="app.master.farmer.farmer.farmer-id" ></span><span th:text="${farmerID}" ></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+
+                <form id="farmerForm" name="farmerForm" method="post" th:object="${farmer}">
+
+                    <div class="card" style="width: 100%;">
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <label for="farmerName" data-i18n="app.master.farmer.farmer.farmer-name"></label>
+                                    <input type="hidden" id="id" th:field="*{id}">
+                                    <input type="text" id="farmerName" th:field="*{farmerName}" class="form-control"  placeholder="Farmer Name" autocomplete="off" required>
+                                </div>
+                                <div class="col-4">
+                                    <label for="email" data-i18n="app.master.farmer.farmer.email"></label>
+                                    <input type="email" id="email" th:field="*{email}" class="form-control"  placeholder="xyz@gmail.com" autocomplete="off" required>
+                                </div>
+                                <div class="col-4">
+                                    <label for="contactNo" data-i18n="app.master.farmer.farmer.contact-no"></label>
+                                    <input type="text" id="contactNo" th:field="*{contactNo}" class="form-control"  placeholder="Phone No" maxlength="10" minlength="10" onkeypress="return isNumberKey(this,event);" autocomplete="off" required>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-4">
+                                    <label for="contactNo" data-i18n="app.master.farmer.farmer.aadhar-id"></label>
+                                    <input type="text" id="aadharId" th:field="*{aadharId}" class="form-control"  placeholder="1111 2222 3333" maxlength="12" minlength="12" onkeypress="return isNumberKey(this,event);" autocomplete="off" required>
+                                </div>
+                                <div class="col-4">
+                                    <label for="contactNo" data-i18n="app.master.farmer.farmer.farmer-id"></label>
+                                    <input type="text" id="farmerId" th:field="*{farmerId}" class="form-control"  placeholder="Farmer ID" maxlength="11" minlength="11" onkeypress="return isNumberKey(this,event);" autocomplete="off" required>
+                                </div>
+                                <div class="col-4">
+                                    <label for="sanch" data-i18n="app.master.farmer.farmer.sanch"></label>
+                                    <select th:field="*{sanch}" class="form-control select2" data-control="select2" data-placeholder="Select an option">
+                                        <option value="">---Select---</option>
+                                        <option value="Thibak">Thibak</option>
+                                        <option value="Tushar">Tushar</option>
+                                        <option value="Micro-Sprinkal">Micro-Sprinkal</option>
+                                        <option value="Mini-Sprinkal">Mini-Sprinkal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-4" style="position: relative;">
+                                    <label for="district" data-i18n="app.master.farmer.farmer.district"></label>
+                                    <select th:field="*{district}" id="district" class="form-control select2" data-control="select2" data-placeholder="Select an option" onchange="updateTahsilList(this);">
+                                        <option value="-1">---Select---</option>
+                                        <option th:each="dist : ${districtList}"
+                                                th:value="${dist.districtId}"
+                                                th:text="${dist.districtName}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <label for="tehsil" data-i18n="app.master.farmer.farmer.tehsil"></label>
+                                    <select th:field="*{tehsil}" id="tehsil" class="form-control select2" data-control="select2" data-placeholder="Select an option">
+                                        <option value="-1">---Select---</option>
+                                        <option th:each="teh : ${tehsilList}"
+                                                th:value="${teh.talukaId}"
+                                                th:text="${teh.talukaName}">
+                                        </option>
+                                    </select>
+                                </div>                    
+                                <div class="col-4">
+                                    <label for="" data-i18n="app.master.farmer.farmer.address"></label>
+                                    <Textarea cols="5" id="address" th:field="*{address}" placeholder="Address" class="form-control" required></Textarea>
+                                    <!-- <input type="text"    maxlength="10" minlength="10" onkeypress="return isNumberKey(this,event);" autocomplete="off" > -->
+                                </div>                          
+                            </div>                     
+
+                        </div>
+                    </div>
+
+
+
+                    <br/>
+                    <table style="width:100%">
+                        <tr style="width: 100%; height: 25px; font-size: 12px;">
+                            <td style="width:100%">
+                                    <span th:if="${farmerID == '' || farmerID == null}">
+                                        <button id="create" name="create" value="create" class="btn btn-outline-success rounded-pill"><i class="glyph-icon icon-check-circle-o"></i>Create</button>
+                                    </span>
+                                    <span th:if="${farmerID != ''}">
+                                        <button id="update" name="update" value="update" class="btn btn-outline-success rounded-pill"><i class="glyph-icon icon-check-circle-o"></i>Update</button>
+                                        &nbsp;&nbsp;
+                                        <button id="delete" name="delete" value="delete" class="btn btn-outline-danger rounded-pill"><i class="glyph-icon icon-check-circle-o"></i>Delete</button>
+                                    </span>
+                                    &nbsp;&nbsp;
+                                    <a class="btn btn-outline-info rounded-pill" th:href="@{/farmerView}" ><i class="glyph-icon icon-arrow-circle-o-left"></i>Back</a>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <input type="hidden" id="btnAction" name="btnAction">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    
+</body>
+
+    <script>
+        $(document).ready(function(){
+            let btnAction = null;
+            let errorString = null;
+            
+            $('.select2').select2({width: '100%', allowClear: true, dropdownAutoWidth: true});
+            
+// 			var cateList = document.getElementById("farmerList").value.split(",");
+			
+// 			console.log("cateList : "+cateList);
+// 			var itemArr = new Array();
+// 			for (var i = 0; i < cateList.length; i++) {
+// 				var value = cateList[i].replace("[", "");
+// 				value = value.replace("]", "");
+// 				console.log("pushing value :: "+value);
+// 				itemArr.push(value);
+// 			}
+			
+// 			var o,e=itemArr;
+// 			$("#farmerName").typeahead(
+// 					{hint:!0,highlight:!0,minLength:1},
+// 					{name:"select",
+// 						source:(o=e,function(e,a){
+// 							var t=[];substrRegex=new RegExp(e,"i"),
+// 								$.each(o,function(e,a){
+// 									substrRegex.test(a)&&t.push(a)
+// 								}),a(t)
+// 							})
+// 						});
+
+            $( '#select-field' ).select2( {
+                theme: 'bootstrap-5'
+            } );
+            
+
+            $('.btn').click(function(){
+                btnAction = $(this).val();
+            });
+
+			$("form").submit(function(){
+
+				var phoneno = $("#contactNo").val();
+				
+				if(phoneno.length < 10){
+					errorString = "Please enter valid mobile number." +"\n";
+				}
+				
+				if($("#email").val() != ""){
+					if (!ValidateEmail($("#email").val())) {
+						errorString = "Please enter valid emial." +"\n";
+				     }
+				}
+				
+				if(errorString!=null && errorString != ""){
+					window.alert(errorString);
+					errorString = "";
+					return false;
+				}else{
+					submitPage(btnAction);
+					return true;
+				}
+				
+			});
+            
+        });
+
+        function isNumberKey(txt, evt) {
+            
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode == 46) {
+                //Check if the text already contains the . character
+                if (txt.value.indexOf('.') === -1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                if (charCode > 31
+                    && (charCode < 48 || charCode > 57))
+                    return false;
+            }
+            return true;
+        }
+
+        function copyToTheCompanyName(farmer){
+
+            let farmerName = farmer.value;
+
+            document.getElementById("companyName").value = farmerName;
+
+        }
+
+		function submitPage(actionVal){
+			
+			document.getElementById("btnAction").value = actionVal;
+			
+			if(actionVal=="create"){
+				document.farmerForm.action="/farmerSave";
+				document.farmerForm.submit();
+			} else if(actionVal=="approve"){
+				document.farmerForm.action="/farmerApprove";
+				document.farmerForm.submit();
+			}else if(actionVal=="decline"){
+				document.farmerForm.action="/farmerDecline";
+				document.farmerForm.submit();
+			} else if(actionVal=="update"){
+				document.farmerForm.action="/farmerUpdate";
+				document.farmerForm.submit();
+			} else if(actionVal=="delete"){
+				document.farmerForm.action="/farmerDelete";
+				document.farmerForm.submit();
+			}
+		}
+		
+		function ValidateEmail(email) {
+		    var expr = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+		    return expr.test(email);
+		}
+		
+		function updateTahsilList(district){
+			var districtId = district.value;
+			
+			$.ajax({
+				url : "/getTehsils",
+				type : "POST",
+				data : {districtId : districtId},
+				success : function(data){
+					
+					let tehsilVal = document.getElementById("tehsil").value;
+					
+					var tehsilSelectBox = document.getElementById('tehsil');
+					tehsilSelectBox.innerHTML = "";
+					
+					let option = document.createElement("option");
+					option.value = "";
+					option.text = "--- Select ---";
+					tehsilSelectBox.appendChild(option);
+					for(var i=0; i<data.length; i++){
+						let option = document.createElement("option");
+						option.value = data[i].talukaId;
+						option.text = data[i].talukaName;
+						tehsilSelectBox.appendChild(option);
+					}
+					
+					tehsilSelectBox.value = tehsilVal;
+					
+					$(tehsilSelectBox).select2({
+		                width: '100%'
+		              });				
+				}
+			});
+		}
+
+    </script>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/custome-select2-design.css}">
+    <link rel="stylesheet" th:href="@{/css/custome-css.css}">
+</head>
+<body>
+
+    <th:block th:fragment="sideBar">
+        <div class="sidebar-container">
+            <nav class="sidebar-nav">
+                <!-- Home Link -->
+                <div class="nav-item">
+                    <a href="/" class="nav-link">
+                        <div class="nav-icon"><i class="fa-solid fa-house"></i></div>
+                        <span class="nav-text" data-i18n="app.menu.home"></span>
+                    </a>
+                </div>
+
+                <!-- Sales Dropdown -->
+                <div class="nav-item has-submenu">
+                    <a class="nav-link submenu-toggle" data-bs-toggle="collapse" href="#menu2" role="button">
+                        <div class="nav-icon"><i class="fa-solid fa-money-check-dollar"></i></div>
+                        <span class="nav-text" data-i18n="app.menu.sales"></span>
+                        <div class="submenu-arrow"><i class="fa-solid fa-angle-right"></i></div>
+                    </a>
+                    <div class="collapse submenu" id="menu2">
+                        <div class="nav-item">
+                            <a th:href="@{/invoiceView}" class="nav-link submenu-link">
+                                <div class="nav-icon"><i class="fa-solid fa-circle"></i></div>
+                                <span class="nav-text" data-i18n="app.menu.sales.invoice"></span>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a th:href="@{/quotation/view}" class="nav-link submenu-link">
+                                <div class="nav-icon"><i class="fa-solid fa-circle"></i></div>
+                                <span class="nav-text" data-i18n="app.menu.sales.quotation"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Purchase Dropdown -->
+                <div class="nav-item has-submenu">
+                    <a class="nav-link submenu-toggle" data-bs-toggle="collapse" href="#menu3" role="button">
+                        <div class="nav-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+                        <span class="nav-text" data-i18n="app.menu.purchase"></span>
+                        <div class="submenu-arrow"><i class="fa-solid fa-angle-right"></i></div>
+                    </a>
+                    <div class="collapse submenu" id="menu3">
+                        <div class="nav-item">
+                            <a th:href="@{/purchaseOrderView}" class="nav-link submenu-link">
+                                <div class="nav-icon"><i class="fa-solid fa-circle"></i></div>
+                                <span class="nav-text" data-i18n="app.menu.purchase"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Masters Dropdown -->
+                <div class="nav-item has-submenu">
+                    <a class="nav-link submenu-toggle" data-bs-toggle="collapse" href="#menu4" role="button">
+                        <div class="nav-icon"><i class="fa-solid fa-code-branch"></i></div>
+                        <span class="nav-text" data-i18n="app.menu.masters"></span>
+                        <div class="submenu-arrow"><i class="fa-solid fa-angle-right"></i></div>
+                    </a>
+                    <div class="collapse submenu" id="menu4">
+                        <div sec:authorize="hasRole('SUPERADMIN')" class="nav-item">
+                            <a th:href="@{/entity/view}" class="nav-link submenu-link">
+                                <div class="nav-icon"><i class="fa-solid fa-circle"></i></div>
+                                <span class="nav-text" data-i18n="app.menu.masters.entity"></span>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a th:href="@{/farmerView}" class="nav-link submenu-link">
+                                <div class="nav-icon"><i class="fa-solid fa-circle"></i></div>
+                                <span class="nav-text" data-i18n="app.menu.masters.farmer"></span>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a th:href="@{/item/view}" class="nav-link submenu-link">
+                                <div class="nav-icon"><i class="fa-solid fa-circle"></i></div>
+                                <span class="nav-text" data-i18n="app.menu.masters.items"></span>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a th:href="@{/manufacturer/view}" class="nav-link submenu-link">
+                                <div class="nav-icon"><i class="fa-solid fa-circle"></i></div>
+                                <span class="nav-text" data-i18n="app.menu.masters.manufacturer"></span>
+                            </a>
+                        </div>                        
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Scripts (same as before) -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>	
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-3-typeahead/bootstrap3-typeahead.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+        
+        
+        <script>
+     // Initialize Select2 with responsive settings
+        function initializeSelect2() {
+            $('.select2').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                dropdownAutoWidth: true,
+                allowClear: true,
+                closeOnSelect: true
+            }).on('select2:open', function() {
+                // Fix for dropdown position on zoom
+                setTimeout(() => {
+                    document.querySelector('.select2-container--open .select2-dropdown').style.position = 'absolute';
+                }, 10);
+            });
+        }
+
+        // Function to force Select2 to recalculate dimensions
+        function refreshSelect2() {
+            $('.select2').each(function() {
+                var $select = $(this);
+                var $container = $select.next('.select2-container');
+                
+                if ($container.length) {
+                    // Trigger dimension recalculation
+                    $container.css('width', '100%');
+                    $select.trigger('change.select2');
+                }
+            });
+        }
+
+        // Handle zoom and resize events
+        let lastZoom = 100;
+        function checkZoom() {
+            const currentZoom = Math.round(window.devicePixelRatio * 100);
+            if (currentZoom !== lastZoom) {
+                lastZoom = currentZoom;
+                refreshSelect2();
+            }
+        }
+        
+        $(document).ready(function () {
+
+            // Set up CSRF token for all AJAX requests
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-Token': $('input[name="_csrf"]').val()
+                }
+            });
+            
+            initializeSelect2();
+            
+            // Set up zoom/resize detection
+            const resizeObserver = new ResizeObserver(() => {
+                checkZoom();
+                refreshSelect2();
+            });
+            
+            resizeObserver.observe(document.body);
+            
+            // Also check on window resize
+            $(window).on('resize', function() {
+                checkZoom();
+                refreshSelect2();
+            });          
+        });
+        </script>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.title"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <!-- Or for RTL support -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
+    
+    <script src="https://kit.fontawesome.com/2fd82847eb.js" crossorigin="anonymous"></script>
+    
+   	<!-- Google Fonts: Poppins -->
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Add the Bootstrap theme CSS after Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" th:href="@{/css/custome-css.css}">
+    <link rel="stylesheet" th:href="@{/css/custome-select2-design.css}">
+
+    <style>
+        #addButton:hover{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout">
+        <div class="item" th:insert="~{layout/defaultHeader :: header}"></div>
+        <div class="item" th:insert="~{layout/defaultMenu :: sideBar}"></div>
+        <div class="item">
+
+            <div class="container-fluid" style="overflow: auto;">
+
+                <form id="itemForm" name="itemForm" method="post" th:object="${item}">
+
+                    <div class="content">
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <h5 class="title" data-i18n="app.master.item.item.title"></h5>
+                                        <p ><b data-i18n="app.master.item.item.item-id"></b><span th:text="${itemID}" ></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card default-card shadow-lg p-3 mb-5 bg-white rounded" style="width: 100%;">
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label for="itemName" data-i18n="app.master.item.item.item-name"></label>
+                                        <br/>
+                                        <input type="hidden" id="id" th:field="*{id}">
+                                        <input type="text" id="itemName" th:field="*{itemName}" class="form-control"  placeholder="Item Name" autocomplete="off" required>
+                                    </div>
+                                    
+                                    <div class="col-4">
+                                        <label for="itemName" data-i18n="app.master.item.item.category"></label>
+                                        <br/>
+                                        <select th:field="*{categoryId}" class="form-control select2" data-control="select2" data-placeholder="Select an option">
+                                            <option value="-1">---Select Category---</option>
+                                            <option th:each="cat : ${categoryList}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="measurementType" data-i18n="app.master.item.item.unit"></label>
+                                        <br/>
+                                        <input type="text" id="measurementType" th:field="*{measurementType}" class="form-control"  placeholder="Measurement Type" autocomplete="off" required>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label for="gstRate" data-i18n="app.master.item.item.gst-rate"></label>
+                                        <br/>
+                                        <input type="text" id="gstRate" th:field="*{gstRate}" class="form-control"  placeholder="GST Rate" autocomplete="off" required>
+                                    </div>
+                                </div>
+                                
+                                <select id="manufacturerOptions" style="display: none;">
+                                    <option value="">Select Manufacturer</option>
+                                    <option th:each="man : ${manufacturers}" th:value="${man.id}" th:text="${man.name}"></option>
+                                </select>
+                                
+
+                            </div>
+                        </div>
+
+                        <br>
+                        <br>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <b data-i18n="app.master.item.item.item-detail-title"></b>&nbsp;&nbsp;
+                                        <a onclick="addDetailsRow();" id="addButton"><span><i class="fa-solid fa-plus"></i></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="card default-card shadow-lg p-3 mb-5 bg-white rounded" style="width: 100%;">
+                            <div class="card-body">
+
+                                    <table class="table table-bordered">
+
+                                        <thead>
+                                            <tr>
+                                                <th data-i18n="app.master.title.title.table-heading.manufacturer"></th>
+                                                <th data-i18n="app.master.title.title.table-heading.quantity"></th>
+                                                <th data-i18n="app.master.title.title.table-heading.rate"></th>
+                                                <th data-i18n="app.master.title.title.table-heading.cml-number"></th>
+                                                <th data-i18n="app.master.title.title.table-heading.remove"></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="manufacturerDetailsBody">
+
+                                            <tr th:each="detail, iterStat : *{itemManufacturerDetailsList}">
+                                                <td>
+                                                    <input type="hidden" th:field="*{itemManufacturerDetailsList[__${iterStat.index}__].id}" class="form-control"/>
+                                                    <select th:field="*{{itemManufacturerDetailsList[__${iterStat.index}__].manufacturerId}}" class="form-control select2" data-control="select2" data-placeholder="Select an option">
+                                                        <option value="-1">---Select Manufacturer---</option>
+                                                        <option th:each="man : ${manufacturers}" th:value="${man.id}" th:text="${man.name}"></option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" th:field="*{itemManufacturerDetailsList[__${iterStat.index}__].quantity}" placeholder="Quantity" class="form-control"/>
+                                                </td>
+                                                <td>
+                                                    <input type="text" th:field="*{itemManufacturerDetailsList[__${iterStat.index}__].rate}" placeholder="Rate" class="form-control"/>
+                                                </td>
+                                                <td>
+                                                    <input type="text" th:field="*{itemManufacturerDetailsList[__${iterStat.index}__].cmlNumber}" placeholder="CML Number" class="form-control"/>
+                                                </td>
+                                                <td>
+                                                    <a onclick="removeDetails(this);"><i class="fa-solid fa-xmark remove-icon"></i> </a>
+                                                </td>
+                                            </tr>
+
+                                            <tr th:if="*{itemManufacturerDetailsList.size()} == 0">
+                                                <td>
+                                                    <select th:field="*{itemManufacturerDetailsList[0].manufacturerId}" class="form-control select2" data-control="select2" data-placeholder="Select an option">
+                                                        <option value="-1">---Select Manufacturer---</option>
+                                                        <option th:each="man : ${manufacturers}" th:value="${man.id}" th:text="${man.name}"></option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" th:field="*{itemManufacturerDetailsList[0].quantity}" placeholder="Quantity" class="form-control"/>
+                                                </td>                                        
+                                                <td>
+                                                    <input type="text" th:field="*{itemManufacturerDetailsList[0].rate}" placeholder="Rate" class="form-control"/>
+                                                </td>                                        
+                                                <td>
+                                                    <input type="text" th:field="*{itemManufacturerDetailsList[0].cmlNumber}" placeholder="CML Number" class="form-control"/>
+                                                </td>
+                                                <td>
+                                                    <a onclick="removeDetails(this);"><i class="fa-solid fa-xmark remove-icon"></i> </a>
+                                                </td>                                        
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+
+                            </div>
+                        </div>
+
+                        <br/>
+                        <table style="width:100%">
+                            <tr style="width: 100%; height: 25px; font-size: 12px;">
+                                <td style="width:100%">
+                                        <span th:if="${itemID == null || itemID == ''}">
+                                            <button id="create" name="create" value="create" class="btn btn-outline-success rounded-pill"><i class="glyph-icon icon-check-circle-o"></i>Create</button>
+                                        </span>
+                                        <span th:if="${itemID != null  && itemID != ''}">
+                                            <button id="update" name="update" value="update" class="btn btn-outline-success rounded-pill"><i class="glyph-icon icon-check-circle-o"></i>Update</button>
+                                            &nbsp;&nbsp;
+                                            <button id="delete" name="delete" value="delete" class="btn btn-outline-danger rounded-pill"><i class="glyph-icon icon-check-circle-o"></i>Delete</button>
+                                        </span>
+                                        &nbsp;&nbsp;
+                                        <a class="btn btn-outline-info rounded-pill" th:href="@{/item/view}" ><i class="glyph-icon icon-arrow-circle-o-left"></i>Back</a>
+                                </td>
+                            </tr>
+                        </table>
+						<br>
+						<br>
+                        <input type="hidden" id="btnAction" name="btnAction">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                    </div>
+
+                </form>
+
+            </div>            
+
+        </div>
+    </div>
+    
+</body>
+
+    <script>
+        $(document).ready(function(){
+            let btnAction = null;
+            let errorString = null;
+
+            $('.btn').click(function(){
+                btnAction = $(this).val();
+            });
+
+            $('.select2').select2({width: '100%', allowClear: true, dropdownAutoWidth: true});
+
+			$("form").submit(function(){
+				
+				if(errorString!=null && errorString != ""){
+					window.alert(errorString);
+					errorString = "";
+					return false;
+				}else{
+					submitPage(btnAction);
+					return true;
+				}
+				
+			});
+            
+        });
+
+        function isNumberKey(txt, evt) {
+            
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode == 46) {
+                //Check if the text already contains the . character
+                if (txt.value.indexOf('.') === -1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                if (charCode > 31
+                    && (charCode < 48 || charCode > 57))
+                    return false;
+            }
+            return true;
+        }
+
+		function submitPage(actionVal){
+			
+			document.getElementById("btnAction").value = actionVal;
+			
+			if(actionVal=="create"){
+				document.itemForm.action="/item/save";
+				document.itemForm.submit();
+			} else if(actionVal=="update"){
+				document.itemForm.action="/item/update";
+				document.itemForm.submit();
+			} else if(actionVal=="delete"){
+				document.itemForm.action="/item/delete";
+				document.itemForm.submit();
+			}
+		}
+		
+		function ValidateEmail(email) {
+		    var expr = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+		    return expr.test(email);
+		}
+
+        function addDetailsRow(){
+            const tableBody = document.getElementById("manufacturerDetailsBody");
+
+            const rowCount = tableBody.rows.length;
+
+            const row = document.createElement("tr");
+
+            const manufacturerOptions = document.getElementById("manufacturerOptions").innerHTML;
+            
+            console.log(manufacturerOptions);
+
+            row.innerHTML = `
+                <td>
+	                <select name="itemManufacturerDetailsList[${rowCount}].manufacturerId" class="form-control select2" data-control="select2" data-placeholder="Select an option">
+	                    ${manufacturerOptions}
+	                </select>
+	            </td>
+                <td>
+                <input type="text" name="itemManufacturerDetailsList[${rowCount}].quantity" placeholder="Quantity" class="form-control"/>
+            </td>	            
+                <td>
+                    <input type="text" name="itemManufacturerDetailsList[${rowCount}].rate" placeholder="Rate" class="form-control" />
+                </td>
+                <td>
+                    <input type="text" name="itemManufacturerDetailsList[${rowCount}].cmlNumber" placeholder="CML Number" class="form-control" />
+                </td>
+                <td>
+                    <a onclick="removeDetails(this);"><i class="fa-solid fa-xmark remove-icon"></i> </a>
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+            reIndexTable(tableBody);  
+            
+            $('.select2').select2({width: '100%', allowClear: true, dropdownAutoWidth: true});
+        }
+
+        function removeDetails(td){
+            // if (event.target.classList.contains("removeRow")) {
+                const row = td.closest("tr");
+                row.remove();
+                // reIndexTable();
+            // }
+        }
+
+        // Reindex form fields after add/remove
+        function reIndexTable(tableBody) {
+            const rows = tableBody.querySelectorAll("tr");
+            rows.forEach((row, index) => {
+                const inputs = row.querySelectorAll("input");
+                inputs.forEach(input => {
+                    if (input.name.includes("itemManufacturerDetailsList")) {
+                        const field = input.name.split(".")[1]; // e.g., rate, manufacturerId
+                        input.name = `itemManufacturerDetailsList[${index}].${field}`;
+                    }
+                });
+            });
+        }        
+    </script>
+</html>

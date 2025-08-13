@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.title"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/font-awesome.min.css">
+    
+	<!-- DataTables CSS -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
+	
+    <script src="https://kit.fontawesome.com/2fd82847eb.js" crossorigin="anonymous"></script>
+    
+   	<!-- Google Fonts: Poppins -->
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">    
+
+	<link rel="stylesheet" th:href="@{/css/custome-css.css}">
+</head>
+<body>
+
+    <div class="layout">
+        <div class="item" th:insert="~{layout/defaultHeader :: header}"></div>
+        <div class="item" th:insert="~{layout/defaultMenu :: sideBar}"></div>
+        <div class="item">
+
+            <div class="content container-fluid"  style="overflow: auto;">
+            
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <h5 class="title" data-i18n="app.master.item.itemView.title"></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <form action="#" method="POST" id="itemViewForm" name="itemViewForm">
+
+                    <div class="card default-card shadow-lg p-3 mb-5 bg-white rounded" style="width: 100%;">
+                        <div class="card-body">
+
+                            <div class="row">
+
+                                <div class="col-2">
+                                    <a th:href="@{/item/create}" class="btn btn-outline-success" data-i18n="app.createBtn">Create</a>
+                                </div>
+
+                            </div>
+                            
+                            <br>
+
+                            <div class="table-responsive">
+                                
+                                <table id = "basic-datatable" class="table table-centered w-100 dt-responsive">
+                                
+                                    <thead class="table-light">
+                                    
+                                        <tr style="font-size: 14px;">
+                                            
+                                            <th style="text-align: center;" data-i18n="app.master.item.itemView.table-heading.id"></th>
+                                            <th style="text-align: center;" data-i18n="app.master.item.itemView.table-heading.item-name"></th>
+                                            <th style="text-align: center;" data-i18n="app.master.item.itemView.table-heading.category"></th>
+                                            <th style="text-align: center;" data-i18n="app.master.item.itemView.table-heading.unit"></th>
+
+                                        </tr>
+                                    
+                                    </thead>
+                                    
+                                    <tbody>
+                                            
+                                            <tr style="width:100%;height:25px; font-size: 11px;" th:each="item : ${itemList}">
+                                            
+                                                <td style="width:15%; cursor: pointer; text-align:center;" class="digienlistdetail"><span onClick="openItemDetails(this);" th:id="${item.id}" th:text="${item.id}"></span></td>
+                                                <td style="width:15%; text-align:center;" class="digienlistdetail" th:text="${item.itemName}"></td>
+                                                <td style="width:15%; text-align:center;" class="digienlistdetail" th:text="${item.categoryId}"></td>
+                                                <td style="width:15%; text-align:center;" class="digienlistdetail" th:text="${item.measurementType}"></td>
+                                            
+                                            </tr>
+                                    
+                                    </tbody>
+                                    
+                                </table>
+                                
+                                <br/>
+                                <div style= "float : right; " id='tableActions'></div>    
+                                
+                            </div>
+
+
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="formData" name="formData">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                </form>
+
+            </div>            
+
+        </div>
+    </div>
+    
+</body>
+
+    <script>        
+        $(document).ready(function () {
+            $('#basic-datatable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                autoWidth: false,
+                columnDefs: [
+                    { orderable: false, targets: [2] }
+                ],
+                language: {
+                    search: "",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
+                },
+                dom: '<"top d-flex justify-content-between"l<"d-flex"f>>rt<"bottom"ip><"clear">', // Custom DOM
+                responsive: true,                        // Make the table responsive
+                lengthMenu: [5, 10, 25, 50],             // Dropdown for page size
+            });
+            
+            var div = document.querySelector(".dataTables_length");
+            div.querySelector("select").style.width = "50%";
+            
+            var div = document.querySelector(".dataTables_filter");
+            div.querySelector("input").placeholder = "Search";
+        });
+       
+        
+        function openItemDetails(item){
+            document.getElementById("formData").value = item.id;
+        	document.itemViewForm.action = "/item/open";
+            document.itemViewForm.method = "POST";
+            document.itemViewForm.submit();
+        }
+    </script>
+</html>

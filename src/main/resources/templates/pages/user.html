@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{app.title}"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/2fd82847eb.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link rel="stylesheet" th:href="@{/css/custome-css.css}">
+</head>
+<body>
+
+    <div class="layout">
+        <div class="item" th:insert="~{layout/defaultHeader :: header}"></div>
+        <div class="item" th:insert="~{layout/defaultMenu :: sideBar}"></div>
+        <div class="item main-content">
+            <div class="container-fluid py-4">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="page-header d-flex justify-content-between align-items-center">
+                            <h2 class="page-title">User Profile</h2>
+                            <div class="action-buttons">
+                                <a class="btn btn-outline-secondary rounded-pill" th:href="@{/}">
+                                    <i class="fas fa-arrow-left me-2"></i>Back
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+				<form id="userForm" name="userForm" method="post" enctype="multipart/form-data" th:object="${user}">
+                    <div class="profile-container">
+                        <div class="profile-card">
+                            <div class="profile-avatar-container">
+								<div class="profile-avatar">
+								    <img id="avatarPreview" th:src="@{/images/logo.png}" alt="Profile Avatar" class="avatar-img">
+								    <div class="avatar-overlay" onclick="document.getElementById('imageUpload').click();">
+								        <i class="fas fa-camera"></i>
+								        <p>Change Photo</p>
+								    </div>
+								    <input type="file" id="imageUpload" name="imageFile" accept="image/*" style="display: none;" onchange="previewImage(event)">
+								</div>
+                                <h4 class="profile-name mt-3" th:text="*{firstName} + ' ' + *{lastName}"></h4>
+                                <p class="profile-role text-muted">Member</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-details-card">
+                            <div class="card">
+                                <div class="card-header bg-transparent">
+                                    <h5 class="card-title mb-0">Personal Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">First Name</label>
+                                            <input type="hidden" th:field="*{password}">
+                                            <input type="hidden" th:field="*{userId}" >
+                                            <input type="text" th:field="*{firstName}" class="form-control form-control-lg" placeholder="Enter first name">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Last Name</label>
+                                            <input type="text" th:field="*{lastName}" class="form-control form-control-lg" placeholder="Enter last name">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Email Address</label>
+                                            <div class="input-group">
+                                            	<input type="hidden" th:field="*{email}">
+                                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                                <input type="email" th:value="*{email}" class="form-control form-control-lg" placeholder="Enter email" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Contact Number</label>
+                                            <div class="input-group">
+                                            	<input type="hidden" th:field="*{contactNumber}">
+                                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                                <input type="text" th:value="*{contactNumber}" class="form-control form-control-lg" placeholder="Enter phone number" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Firm Name</label>
+                                            <div class="input-group">
+                                                <input type="text" th:field="*{firmName}" class="form-control form-control-lg" placeholder="Enter Firm name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">GST Number</label>
+                                            <div class="input-group">
+                                                <input type="text" th:field="*{gstNumber}" class="form-control form-control-lg" placeholder="Enter GST Number">
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions text-end mt-4">
+                        <button type="submit" id="update" name="update" value="update" class="btn btn-primary btn-lg rounded-pill px-4">
+                            <i class="fas fa-save me-2"></i>Update Profile
+                        </button>
+                    </div>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <script>
+        $(document).ready(function(){
+            $('.select2').select2({
+                theme: 'bootstrap-5',
+                width: '100%'
+            });
+
+            $("form").submit(function(e){
+                
+                let errorString = "";
+<!--                const phoneno = $("#contactNumber").val();-->
+<!--                const email = $("#email").val();-->
+<!--                -->
+<!--                if(phoneno.length < 10){-->
+<!--                    errorString += "Please enter a valid mobile number.\n";-->
+<!--                }-->
+<!--                -->
+<!--                if(email && !validateEmail(email)) {-->
+<!--                    errorString += "Please enter a valid email address.\n";-->
+<!--                }-->
+                
+                if(errorString){
+                    showAlert("Validation Error", errorString, "error");
+                    return false;
+                } else {
+                    submitPage("update");
+                    return true;
+                }
+            });
+            
+            // Avatar hover effect
+            $(".profile-avatar").hover(function(){
+                $(this).find(".avatar-overlay").fadeIn(200);
+            }, function(){
+                $(this).find(".avatar-overlay").fadeOut(200);
+            });
+        });
+
+        function submitPage(actionVal){
+            $("#btnAction").val(actionVal);
+            if(actionVal === "update"){
+                $("#userForm").attr("action", "/user/update").submit();
+            }
+        }
+        
+        function validateEmail(email) {
+            const expr = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+            return expr.test(email);
+        }
+        
+        function showAlert(title, message, type) {
+            // You can replace this with a more elegant alert system like SweetAlert
+            alert(title + "\n" + message);
+        }
+        
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const output = document.getElementById('avatarPreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }        
+    </script>
+</body>
+</html>
