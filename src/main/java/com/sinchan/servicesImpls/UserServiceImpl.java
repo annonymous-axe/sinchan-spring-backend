@@ -2,9 +2,17 @@ package com.sinchan.servicesImpls;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+import com.sinchan.user.credentials.SinchanAuthToken;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,5 +101,56 @@ public class UserServiceImpl implements UserService {
 		}
 
 	}
+
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+		User user = new User();
+
+		try {
+
+			String sql = "select user.user_id, user.email, user.password, user.active, role.role as role from users user "
+					+ " join roles role on role.email = user.email "
+					+ " where user.email = '"+email+"' ";
+
+			System.out.println("sql : "+sql);
+
+			return jdbcTemplate.query(sql, new ResultSetExtractor<User>() {
+				@Override
+				public User extractData(ResultSet rs) throws SQLException {
+
+					if(rs.next()) {
+
+						if(rs.getBoolean("active")){
+
+							User user = new User();
+							user.setUserId(rs.getInt("user_id"));
+							user.setEmail(rs.getString("email"));
+							user.setPassword(rs.getString("password"));
+							user.setActive(rs.getBoolean("active"));
+
+							List<SimpleGrantedAuthority> roles = new ArrayList<>();
+
+							for(String role : rs.getString("role").split(",")){
+								roles.add(new SimpleGrantedAuthority(role));
+							}
+
+							user.setRole(roles);
+
+							return user;
+
+						}
+					}
+
+					throw new UsernameNotFoundException("User not found with given username.");
+
+				}
+			});
+
+		}catch(Exception e) {
+			throw new RuntimeException("Exception : "+e);
+		}
+	}
+
 
 }

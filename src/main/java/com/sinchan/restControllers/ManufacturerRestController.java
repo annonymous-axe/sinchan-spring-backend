@@ -2,13 +2,15 @@ package com.sinchan.restControllers;
 
 import com.sinchan.entities.Items;
 import com.sinchan.entities.Manufacturers;
+import com.sinchan.entities.User;
 import com.sinchan.services.ManufacturersService;
+import com.sinchan.user.credentials.SinchanAuthToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 public class ManufacturerRestController {
 
     private final ManufacturersService manufacturersService;
@@ -20,33 +22,52 @@ public class ManufacturerRestController {
     @GetMapping("manufacturer/list")
     public List<Manufacturers> manufacturerList(){
 
-        return manufacturersService.listManufacturers(100);
+        SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+        User user = authToken.getUser();
+
+        return manufacturersService.listManufacturers(user.getUserId());
     }
 
     @PostMapping("manufacturer")
     public void saveManufacturer(@RequestBody Manufacturers manufacturers){
 
-        manufacturersService.save(manufacturers, 100);
+        SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+        User user = authToken.getUser();
+
+        manufacturersService.save(manufacturers, user.getUserId());
 
     }
 
     @GetMapping("manufacturer")
     public Manufacturers openManufacturer(@RequestParam int manufacturerId){
 
-        System.out.println("id : "+manufacturerId);
-        return manufacturersService.findById(manufacturerId, 100);
+		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+		User user = authToken.getUser();
+
+        return manufacturersService.findById(manufacturerId, user.getUserId());
 
     }
 
     @PutMapping("manufacturer")
     public void updateManufacturer(@RequestBody Manufacturers manufactueres){
 
-        manufacturersService.update(manufactueres, 100);
+		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+		User user = authToken.getUser();
+
+        manufacturersService.update(manufactueres, user.getUserId());
     }
 
     @DeleteMapping("manufacturer")
     public void deleteManufacturer(@RequestParam int manufacturerId){
 
-        manufacturersService.delete(manufacturerId, 100);
+		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+		User user = authToken.getUser();
+
+        manufacturersService.delete(manufacturerId, user.getUserId());
     }
 }

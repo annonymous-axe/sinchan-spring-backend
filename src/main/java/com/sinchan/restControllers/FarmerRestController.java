@@ -7,17 +7,18 @@ import com.sinchan.entities.User;
 import com.sinchan.services.FarmerService;
 import com.sinchan.services.InvoiceService;
 import com.sinchan.services.LocationServices;
+import com.sinchan.user.credentials.SinchanAuthToken;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 public class FarmerRestController {
 
 	private final FarmerService farmerService;
@@ -32,17 +33,23 @@ public class FarmerRestController {
 	}
 	
 	@GetMapping("farmer/list")
-	public List<Farmer> clientViewPage() {
+	public List<Farmer> farmerList() {
 
-//		User user = (User) session.getAttribute("user");
+		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
 
-		return farmerService.listFarmers(100);
+		User user = authToken.getUser();
+
+		return farmerService.listFarmers(user.getUserId());
 	}
 
 	@PostMapping("farmer")
 	public ResponseEntity<String> createFarmer(@RequestBody Farmer farmer){
 
-		farmerService.save(farmer, 100);
+		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+		User user = authToken.getUser();
+
+		farmerService.save(farmer, user.getUserId());
 
 		return new ResponseEntity<>("Farmer created!", HttpStatus.CREATED);
 	}
@@ -50,7 +57,11 @@ public class FarmerRestController {
 	@GetMapping("farmer/{farmerId}")
 	public Farmer openFarmer(@PathVariable int farmerId){
 
-		Farmer farmer = farmerService.findById(farmerId, 100);
+		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+		User user = authToken.getUser();
+
+		Farmer farmer = farmerService.findById(farmerId, user.getUserId());
 
 		farmer.setTehsilList(locationService.tehsilList(farmer.getDistrict()));
 
@@ -60,7 +71,11 @@ public class FarmerRestController {
 	@PutMapping("farmer")
 	public ResponseEntity<String> updateFarmer(@RequestBody Farmer farmer){
 
-		farmerService.update(farmer, 100);
+		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+		User user = authToken.getUser();
+
+		farmerService.update(farmer, user.getUserId());
 
 		return new ResponseEntity<>("Updation successfull.", HttpStatus.CREATED);
 	}
@@ -68,7 +83,11 @@ public class FarmerRestController {
 	@DeleteMapping("farmer")
 	public ResponseEntity<String> deleteFarmer(@RequestParam int farmerId){
 
-		farmerService.delete(farmerId, 100);
+		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+		User user = authToken.getUser();
+
+		farmerService.delete(farmerId, user.getUserId());
 
 		return new ResponseEntity<>("Deleted resources", HttpStatus.NO_CONTENT);
 

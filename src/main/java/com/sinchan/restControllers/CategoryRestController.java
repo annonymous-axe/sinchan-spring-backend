@@ -1,16 +1,15 @@
 package com.sinchan.restControllers;
 
 import com.sinchan.entities.Category;
+import com.sinchan.entities.User;
 import com.sinchan.services.CategoryService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.sinchan.user.credentials.SinchanAuthToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 public class CategoryRestController {
 
     private final CategoryService categoryService;
@@ -21,9 +20,12 @@ public class CategoryRestController {
 
     @GetMapping("category/list")
     public List<Category> categoryList(){
-        System.out.println("Category list called.");
 
-        return categoryService.listCategory(100);
+        SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+        User user = authToken.getUser();
+
+        return categoryService.listCategory(user.getUserId());
     }
 
 }

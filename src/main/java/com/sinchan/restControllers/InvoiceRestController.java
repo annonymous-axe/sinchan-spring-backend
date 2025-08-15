@@ -1,14 +1,16 @@
 package com.sinchan.restControllers;
 
 import com.sinchan.entities.Invoice;
+import com.sinchan.entities.User;
 import com.sinchan.services.InvoiceService;
+import com.sinchan.user.credentials.SinchanAuthToken;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 public class InvoiceRestController {
 
     private final InvoiceService invoiceService;
@@ -20,18 +22,30 @@ public class InvoiceRestController {
     @GetMapping("invoice/list")
     public List<Invoice> invoiceList(){
 
-        return invoiceService.listInvoice(100);
+		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+		User user = authToken.getUser();
+
+        return invoiceService.listInvoice(user.getUserId());
     }
 
     @PostMapping("invoice")
     public void saveInvoice(@RequestBody Invoice invoice){
 
-        invoiceService.save(invoice, 100);
+		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+		User user = authToken.getUser();
+
+        invoiceService.save(invoice, user.getUserId());
     }
 
     @GetMapping("invoice")
     public Invoice openInvoice(@RequestParam int invoiceId){
 
-        return invoiceService.findById(invoiceId, 100);
+		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+		User user = authToken.getUser();
+
+        return invoiceService.findById(invoiceId, user.getUserId());
     }
 }
