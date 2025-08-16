@@ -2,7 +2,6 @@ package com.sinchan.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +15,9 @@ public class PurchaseOrder {
 
     private String poNumber;
 
-    private String supplierName;
+    private String supplierNameEn;
+
+    private String supplierNameMh;
 
     private Date purchaseDate;
 

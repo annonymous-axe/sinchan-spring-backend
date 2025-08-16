@@ -1,13 +1,11 @@
 package com.sinchan.restControllers;
 
-import com.sinchan.entities.Farmer;
-import com.sinchan.entities.Invoice;
-import com.sinchan.entities.Tehsil;
-import com.sinchan.entities.User;
+import com.sinchan.entities.*;
 import com.sinchan.services.FarmerService;
 import com.sinchan.services.InvoiceService;
 import com.sinchan.services.LocationServices;
 import com.sinchan.user.credentials.SinchanAuthToken;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -15,8 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 public class FarmerRestController {
@@ -91,5 +91,15 @@ public class FarmerRestController {
 
 		return new ResponseEntity<>("Deleted resources", HttpStatus.NO_CONTENT);
 
+	}
+
+	@GetMapping("sanch/list")
+	public List<Dictionary> sanchList() {
+
+		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+		User user = authToken.getUser();
+
+		return farmerService.listSanch(user.getUserId());
 	}
 }

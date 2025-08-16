@@ -17,13 +17,19 @@ public class User implements UserDetails {
 	
 	private String password;
 	
-	private String firstName;
+	private String firstNameEn;
+
+	private String firstNameMh;
 	
-	private String lastName;
+	private String lastNameEn;
+
+	private String lastNameMh;
 	
 	private String contactNumber;
 	
-	private String firmName;
+	private String firmNameEn;
+
+	private String firmNameMh;
 	
 	private String gstNumber;
 	

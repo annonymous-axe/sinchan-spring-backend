@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.sinchan.entities.Manufacturers;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -24,14 +22,16 @@ public class CategoryServiceImpl implements CategoryService{
 	}
 	
 	@Override
-	public List<Category> listCategory(int userId) {
+	public List<Category> listCategory(int userId, String locale) {
 
 		List<Category> categoryListList = null;
+		String sql = "";
 
 		try {
 
-			String sql = "  select id, name from categories "
-						+ " where user_id = '"+userId+"'";
+			sql = "  select id, name_en, name_mh from categories "
+					+ " where user_id = '" + userId + "'";
+
 
 			categoryListList = jdbcTemplate.query(sql, new RowMapper<Category>() {
 				@Override
@@ -39,7 +39,8 @@ public class CategoryServiceImpl implements CategoryService{
 
 					Category savedCategories = new Category();
 					savedCategories.setId(rs.getInt("id"));
-					savedCategories.setName(rs.getString("name"));
+					savedCategories.setNameEn(rs.getString("name_en"));
+					savedCategories.setNameMh(rs.getString("name_mh"));
 
 					return savedCategories;
 				}

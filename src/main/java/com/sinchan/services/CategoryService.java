@@ -6,6 +6,6 @@ import com.sinchan.entities.Category;
 
 public interface CategoryService {
 	
-	List<Category> listCategory(int userId);
+	List<Category> listCategory(int userId, String locale);
 
 }

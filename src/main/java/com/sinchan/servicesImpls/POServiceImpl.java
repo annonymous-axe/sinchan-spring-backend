@@ -1,7 +1,5 @@
 package com.sinchan.servicesImpls;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,9 +15,7 @@ import com.sinchan.services.POService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -43,7 +39,7 @@ public class POServiceImpl implements POService{
             String sql = "  insert into purchase_orders(id, user_id, po_number, supplier_name, purchase_date, bill_number) "
                     + " values(?, ?, ?, ?, ?, ?) ";
 
-            jdbcTemplate.update(sql, id, userId, purchaseOrder.getPoNumber(), purchaseOrder.getSupplierName(), 
+            jdbcTemplate.update(sql, id, userId, purchaseOrder.getPoNumber(), purchaseOrder.getSupplierNameEn(),
             					purchaseOrder.getPurchaseDate(),purchaseOrder.getBillNumber());
 
             savePurchaseOrderItemDetails(purchaseOrder, id, userId);
@@ -65,7 +61,7 @@ public class POServiceImpl implements POService{
             		+ " purchase_date = ?, bill_number = ? "
                     + " where id = "+purchaseOrder.getId()+"and user_id = "+userId;
 
-            jdbcTemplate.update(sql, purchaseOrder.getId(), userId, purchaseOrder.getPoNumber(), purchaseOrder.getSupplierName(), purchaseOrder.getPurchaseDate(),
+            jdbcTemplate.update(sql, purchaseOrder.getId(), userId, purchaseOrder.getPoNumber(), purchaseOrder.getSupplierNameEn(), purchaseOrder.getPurchaseDate(),
                                 purchaseOrder.getBillNumber());
 
             savePurchaseOrderItemDetails(purchaseOrder, purchaseOrder.getId(), userId);
@@ -99,7 +95,7 @@ public class POServiceImpl implements POService{
 
                         savedPurchaseOrder.setId(id);
                         savedPurchaseOrder.setPoNumber(rs.getString("po_number"));
-                        savedPurchaseOrder.setSupplierName(rs.getString("supplier_name"));
+                        savedPurchaseOrder.setSupplierNameEn(rs.getString("supplier_name"));
                         savedPurchaseOrder.setPurchaseDate(rs.getDate("purchase_date"));
                         savedPurchaseOrder.setBillNumber(rs.getString("bill_number"));
                         savedPurchaseOrder.setCreatedAt(rs.getDate("created_at"));
@@ -134,7 +130,7 @@ public class POServiceImpl implements POService{
                     PurchaseOrder savedPurchaseOrder = new PurchaseOrder();
                     savedPurchaseOrder.setId(rs.getInt("id"));
                     savedPurchaseOrder.setPoNumber(rs.getString("po_number"));
-                    savedPurchaseOrder.setSupplierName(rs.getString("supplier_name"));
+                    savedPurchaseOrder.setSupplierNameEn(rs.getString("supplier_name"));
                     savedPurchaseOrder.setPurchaseDate(rs.getDate("purchase_date"));
                     savedPurchaseOrder.setBillNumber(rs.getString("bill_number"));
 

@@ -108,7 +108,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         try {
 
-            String sql = " select inv.id, inv.farmer, inv.phone, inv.grand_total, farmer.farmer_name from invoice inv "
+            String sql = " select inv.id, inv.farmer, inv.phone, inv.grand_total, farmer.farmer_name_en as farmer_name from invoice inv "
                     + " left join farmers farmer on farmer.id = inv.farmer "
                     + " where inv.user_id = '"+userId+"'";
 
@@ -119,7 +119,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                     Invoice savedInvoice = new Invoice();
                     savedInvoice.setId(rs.getInt("id"));
                     savedInvoice.setFarmer(rs.getInt("farmer"));
-                    savedInvoice.setFarmerName(rs.getString("farmer_name"));
+                    savedInvoice.setFarmerNameEn(rs.getString("farmer_name"));
                     savedInvoice.setContactNo(rs.getString("phone"));
                     savedInvoice.setGrandTotal(rs.getFloat("grand_total"));
 
@@ -158,7 +158,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         try {
 
-            String sql = "select inv.*, farmer.farmer_name, dist.district_name, tehsil.tehsil_name, man.name as manufacturer_name "
+            String sql = "select inv.*, farmer.farmer_name_en as farmer_name_en, farmer.farmer_name_mh as farmer_name_mh, "
+                    + " dist.district_name_en, tehsil.tehsil_name_en, man.name_en as manufacturer_name_en "
                     + " from invoice inv  "
                     + " left join districts dist on dist.district_id = inv.district_id "
                     + " left join tehsils tehsil on tehsil.tehsil_id = inv.tehsil_id "
@@ -177,12 +178,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 
                     	savedInvoice.setId(id);
                     	savedInvoice.setFarmer(rs.getInt("farmer"));
-                        savedInvoice.setFarmerName(rs.getString("farmer_name"));
+                        savedInvoice.setFarmerNameEn(rs.getString("farmer_name_en"));
+                        savedInvoice.setFarmerNameMh(rs.getString("farmer_name_mh"));
                     	savedInvoice.setEmail(rs.getString("email"));
                     	savedInvoice.setContactNo(rs.getString("phone"));
                     	savedInvoice.setAddress(rs.getString("address"));
                     	savedInvoice.setManufacturerId(rs.getInt("manufacturer_id"));
-                        savedInvoice.setManufacturerName(rs.getString("manufacturer_name"));
+                        savedInvoice.setManufacturerName(rs.getString("manufacturer_name_en"));
                     	savedInvoice.setGrandTotal(rs.getFloat("grand_total"));
                     	savedInvoice.setDistrict(rs.getInt("district_id"));
                     	savedInvoice.setSanch(rs.getString("sanch"));
@@ -190,8 +192,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                     	savedInvoice.setAadharId(rs.getString("aadhar_id"));
                     	savedInvoice.setFarmerId(rs.getString("farmer_id"));                    	
                     	savedInvoice.setCreatedAt(rs.getDate("created_at"));
-                        savedInvoice.setDistrictName(rs.getString("district_name"));
-                        savedInvoice.setTehsilName(rs.getString("tehsil_name"));
+                        savedInvoice.setDistrictName(rs.getString("district_name_en"));
+                        savedInvoice.setTehsilName(rs.getString("tehsil_name_en"));
 
                     	savedInvoice.setInvoiceItemList(listInvoiceItemDetails(savedInvoice.getId(), userId));
                     }
@@ -214,7 +216,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         try {
 
-            String sql = " select inv.id, inv.farmer, inv.phone, inv.grand_total, farmer.farmer_name from invoice inv "
+            String sql = " select inv.id, inv.farmer, inv.phone, inv.grand_total, farmer.farmer_name_en as farmer_name_en, "
+                    + " farmer.farmer_name_mh as farmer_name_mh from invoice inv "
                     + " left join farmers farmer on farmer.id = inv.farmer "
                     + " where inv.user_id = '"+userId+"'";
 
@@ -225,7 +228,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                 	Invoice savedInvoice = new Invoice();
                 	savedInvoice.setId(rs.getInt("id"));
                 	savedInvoice.setFarmer(rs.getInt("farmer"));
-                    savedInvoice.setFarmerName(rs.getString("farmer_name"));
+                    savedInvoice.setFarmerNameEn(rs.getString("farmer_name_en"));
+                    savedInvoice.setFarmerNameMh(rs.getString("farmer_name_mh"));
                 	savedInvoice.setContactNo(rs.getString("phone"));
                 	savedInvoice.setGrandTotal(rs.getFloat("grand_total"));
 
@@ -319,7 +323,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         try {
 
-            String sql = " select distinct inv_item.*, item.name as item_name, cat.name as category_name from invoice_items inv_item "
+            String sql = " select distinct inv_item.*, item.name_en as item_name_en, cat.name_en as category_name_en from invoice_items inv_item "
                     + " left join items item on item.id = inv_item.item_id "
                     + " left join categories cat on cat.id = inv_item.category_id "
                     + " where inv_item.invoice_id = "+invoiceId+" and inv_item.user_id = "+userId;
@@ -338,8 +342,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                 	savedInvoiceItems.setQuantity(rs.getInt("quantity"));
                 	savedInvoiceItems.setCmlNumber(rs.getString("cml_number"));
                 	savedInvoiceItems.setTotal(rs.getFloat("total"));
-                    savedInvoiceItems.setItemName(rs.getString("item_name"));
-                    savedInvoiceItems.setCategoryName(rs.getString("category_name"));
+                    savedInvoiceItems.setItemName(rs.getString("item_name_en"));
+                    savedInvoiceItems.setCategoryName(rs.getString("category_name_en"));
 
                     return savedInvoiceItems;
                 }

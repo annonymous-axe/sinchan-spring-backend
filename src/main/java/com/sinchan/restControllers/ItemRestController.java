@@ -102,4 +102,14 @@ public class ItemRestController {
 
         return labelValService.getItemDetails(itemId, manufacturerId, user.getUserId());
     }
+
+    @GetMapping("unit/list")
+    public List<Dictionary> listUnits() {
+
+        SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
+
+        User user = authToken.getUser();
+
+        return itemService.listUnits(user.getUserId());
+    }
 }

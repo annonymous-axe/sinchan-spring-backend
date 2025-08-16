@@ -2,6 +2,7 @@ package com.sinchan.services;
 
 import java.util.List;
 
+import com.sinchan.entities.Dictionary;
 import com.sinchan.entities.Farmer;
 
 public interface FarmerService {
@@ -19,5 +20,7 @@ public interface FarmerService {
 	// for rest apis
 
 	void delete(int farmerId, int userId);
+
+	List<Dictionary> listSanch(int userId);
 
 }

@@ -3,24 +3,18 @@ package com.sinchan.servicesImpls;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import com.sinchan.user.credentials.SinchanAuthToken;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sinchan.entities.Farmer;
 import com.sinchan.entities.User;
 import com.sinchan.services.UserService;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Repository
 public class UserServiceImpl implements UserService {
@@ -51,9 +45,9 @@ public class UserServiceImpl implements UserService {
 						savedUser.setUserId(rs.getInt("user_id"));
 						savedUser.setActive(rs.getBoolean("active"));
 						savedUser.setEmail(rs.getString("email"));
-						savedUser.setFirmName(rs.getString("firm_name"));
-						savedUser.setFirstName(rs.getString("first_name"));
-						savedUser.setLastName(rs.getString("last_name"));
+						savedUser.setFirmNameEn(rs.getString("firm_name"));
+						savedUser.setFirstNameEn(rs.getString("first_name"));
+						savedUser.setLastNameEn(rs.getString("last_name"));
 						savedUser.setAddress(rs.getString("address"));
 						savedUser.setContactNumber(rs.getString("contact_number"));
 						savedUser.setGstNumber(rs.getString("gst_number"));
@@ -78,7 +72,7 @@ public class UserServiceImpl implements UserService {
 			String sql = "  update users set address = ?, firm_name = ?, first_name = ?, last_name = ?, gst_number = ? "
 				+ " where user_id = "+user.getUserId();
 
-			jdbcTemplate.update(sql, user.getAddress(), user.getFirmName(), user.getFirstName(), user.getLastName(), user.getGstNumber());
+			jdbcTemplate.update(sql, user.getAddress(), user.getFirmNameEn(), user.getFirstNameEn(), user.getLastNameEn(), user.getGstNumber());
 
 		}catch(Exception e) {
 			throw new RuntimeException("Exception : "+e);

@@ -3,9 +3,12 @@ package com.sinchan.restControllers;
 import com.sinchan.entities.District;
 import com.sinchan.entities.Tehsil;
 import com.sinchan.services.LocationServices;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 public class AppServiceRestController {
@@ -17,7 +20,9 @@ public class AppServiceRestController {
     }
 
     @GetMapping("district/list")
-    public List<District> districtList() {
+    public List<District> districtList(HttpServletRequest request) {
+
+        Locale locale = RequestContextUtils.getLocale(request);
 
         return locationService.districtList();
     }

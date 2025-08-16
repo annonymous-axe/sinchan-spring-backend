@@ -7,6 +7,8 @@ public class District {
 
 	private int districtId;
 	
-	private String districtName;
+	private String districtNameEn;
+
+	private String districtNameMh;
 
 }

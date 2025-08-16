@@ -15,7 +15,9 @@ public class Invoice {
 
     private int farmer;
 
-    private String farmerName;
+    private String farmerNameEn;
+
+    private String farmerNameMh;
 
     private String email;
 

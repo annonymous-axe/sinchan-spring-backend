@@ -176,7 +176,7 @@ public class LabelValService {
 
         try {
 
-            String sql = "select imd.quontity, imd.cml_number, item.unit, imd.rate"
+            String sql = "select imd.quantity, imd.cml_number, item.unit, imd.rate"
                     + " from item_manufacturer_details imd "
                     + " left join items item on item.id = imd.item_id "
                     + " where imd.item_id = "+itemId+" and imd.manufacturer_id = "+manufacturerId
@@ -190,7 +190,7 @@ public class LabelValService {
                     Dictionary savedDictionary = new Dictionary();
 
                     if(rs.next()) {
-                        savedDictionary.setFloatKey(rs.getFloat("quontity"));
+                        savedDictionary.setFloatKey(rs.getFloat("quantity"));
                         savedDictionary.setStringValue(rs.getString("cml_number"));
                         savedDictionary.setFloatKey2(rs.getFloat("rate"));
                         savedDictionary.setStringValue2(rs.getString("unit"));
@@ -252,7 +252,7 @@ public class LabelValService {
 
         try {
 
-            String sql = "  select id, name from items where category_id = '"+categoryId+"' and user_id = '"+userId+"'";
+            String sql = "  select id, name_en from items where category_id = '"+categoryId+"' and user_id = '"+userId+"'";
             log.info("sql :: "+sql);
 
             dictionaryList = jdbcTemplate.query(sql, new RowMapper<Dictionary>() {
@@ -261,7 +261,7 @@ public class LabelValService {
 
                     Dictionary savedDictionary = new Dictionary();
                     savedDictionary.setIntKey(rs.getInt("id"));
-                    savedDictionary.setStringValue(rs.getString("name"));
+                    savedDictionary.setStringValue(rs.getString("name_en"));
 
                     return savedDictionary;
                 }

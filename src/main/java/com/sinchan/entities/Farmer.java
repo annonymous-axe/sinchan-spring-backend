@@ -8,19 +8,21 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-//@Entity
-//@Table(name = "farmers")
 public class Farmer{
 
 	private int id;
 	
-	private String farmerName;
+	private String farmerNameEn;
+
+	private String farmerNameMh;
 	
 	private String email;
 	
 	private String contactNo;
 	
-	private String address;
+	private String addressEn;
+
+	private String addressMh;
 
 	private String sanch;
 

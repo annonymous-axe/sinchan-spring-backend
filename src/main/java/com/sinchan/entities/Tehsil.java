@@ -5,10 +5,12 @@ import lombok.Data;
 @Data
 public class Tehsil {
 
-	private int talukaId;
+	private int tehsilId;
 
 	private int districtId;
 	
-	private String talukaName;
+	private String tehsilNameEn;
+
+	private String tehsilNameMh;
 
 }

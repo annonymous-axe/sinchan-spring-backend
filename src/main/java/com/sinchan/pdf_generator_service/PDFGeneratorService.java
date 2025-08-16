@@ -130,7 +130,7 @@ public class PDFGeneratorService {
 
         // Title
         contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 18);
-        String firmName = user.getFirmName();
+        String firmName = user.getFirmNameEn();
         drawCenteredString(contentStream, firmName!=null?firmName.toUpperCase():"FIRM NAME", pageWidth / 2, startY, pageWidth, 18);
         
         startY -= 15;
@@ -163,7 +163,7 @@ public class PDFGeneratorService {
         contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 10);
         contentStream.beginText();
         contentStream.newLineAtOffset(startX, startY);
-        contentStream.showText("Proprieter Name : "+user.getFirstName()+" "+user.getLastName());
+        contentStream.showText("Proprieter Name : "+user.getFirstNameEn()+" "+user.getLastNameEn());
         contentStream.endText();
         
         contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 10);

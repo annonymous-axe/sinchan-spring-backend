@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.sinchan.entities.Dictionary;
+import com.sinchan.entities.District;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,13 +33,13 @@ public class FarmerServiceImpl implements FarmerService {
 		
 		try {
 			
-			String sql = "  insert into farmers(id, user_id, contact_no, email, farmer_name,"
-						+ "	address, sanch, district_id, tehsil_id, aadhar_id, farmer_id) "
-						+ " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+			String sql = "  insert into farmers(id, user_id, contact_no, email, farmer_name_en, farmer_name_mh,"
+						+ "	address_en, address_mh, sanch, district_id, tehsil_id, aadhar_id, farmer_id) "
+						+ " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 			
 			jdbcTemplate.update(sql, id, userId, farmer.getContactNo(), 
-							   farmer.getEmail(), farmer.getFarmerName(), farmer.getAddress(),
-							   farmer.getSanch(), farmer.getDistrict(), farmer.getTehsil(),
+							   farmer.getEmail(), farmer.getFarmerNameEn(), farmer.getFarmerNameMh(), farmer.getAddressEn(),
+							   farmer.getAddressMh(),farmer.getSanch(), farmer.getDistrict(), farmer.getTehsil(),
 							   farmer.getAadharId(), farmer.getFarmerId());
 			
 		}catch(Exception e) {
@@ -90,12 +92,12 @@ public class FarmerServiceImpl implements FarmerService {
 		
 		try {
 			
-			String sql = "  update farmers set contact_no = ?, email = ?, farmer_name = ?,"
-						+ "	address = ?, sanch = ?, district_id = ?, tehsil_id = ?, aadhar_id = ?, farmer_id = ? "
+			String sql = "  update farmers set contact_no = ?, email = ?, farmer_name_en = ?, farmer_name_mh = ?, "
+						+ "	address_en = ?, address_mh = ?, sanch = ?, district_id = ?, tehsil_id = ?, aadhar_id = ?, farmer_id = ? "
 						+ " where id = "+farmer.getId()+" and user_id = "+userId;
 			
-			jdbcTemplate.update(sql, farmer.getContactNo(), farmer.getEmail(), farmer.getFarmerName(),
-							   farmer.getAddress(), farmer.getSanch(), farmer.getDistrict(), 
+			jdbcTemplate.update(sql, farmer.getContactNo(), farmer.getEmail(), farmer.getFarmerNameEn(), farmer.getFarmerNameMh(),
+							   farmer.getAddressEn(), farmer.getAddressMh(), farmer.getSanch(), farmer.getDistrict(),
 							   farmer.getTehsil(), farmer.getAadharId(), farmer.getFarmerId());
 			
 		}catch(Exception e) {
@@ -108,11 +110,12 @@ public class FarmerServiceImpl implements FarmerService {
 	public List<Farmer> listFarmers(int userId) {
 		
 		List<Farmer> farmers = null;
+		String sql = "";
 		
 		try {
-			
-			String sql = "  select id, farmer_name, email, contact_no, address from farmers "
-						+ " where user_id = '"+userId+"'";
+
+			sql = " select id, farmer_name_en, farmer_name_mh, email, contact_no, address_en, address_mh from farmers "
+				+ " where user_id = '"+userId+"'";
 			
 			farmers = jdbcTemplate.query(sql, new RowMapper<Farmer>() {
 				@Override
@@ -122,9 +125,11 @@ public class FarmerServiceImpl implements FarmerService {
 					savedFarmer.setId(rs.getInt("id"));
 					savedFarmer.setContactNo(rs.getString("contact_no"));
 					savedFarmer.setEmail(rs.getString("email"));
-					savedFarmer.setFarmerName(rs.getString("farmer_name"));
-					savedFarmer.setAddress(rs.getString("address"));
-					
+					savedFarmer.setFarmerNameEn(rs.getString("farmer_name_en"));
+					savedFarmer.setFarmerNameMh(rs.getString("farmer_name_mh"));
+					savedFarmer.setAddressEn(rs.getString("address_en"));
+					savedFarmer.setAddressMh(rs.getString("address_mh"));
+
 					return savedFarmer;
 				}
 			});
@@ -158,8 +163,10 @@ public class FarmerServiceImpl implements FarmerService {
 						savedFarmer.setId(id);
 						savedFarmer.setContactNo(rs.getString("contact_no"));
 						savedFarmer.setEmail(rs.getString("email"));
-						savedFarmer.setFarmerName(rs.getString("farmer_name"));
-						savedFarmer.setAddress(rs.getString("address"));
+						savedFarmer.setFarmerNameEn(rs.getString("farmer_name_en"));
+						savedFarmer.setFarmerNameMh(rs.getString("farmer_name_mh"));
+						savedFarmer.setAddressEn(rs.getString("address_en"));
+						savedFarmer.setAddressMh(rs.getString("address_mh"));
 						savedFarmer.setSanch(rs.getString("sanch"));
 						savedFarmer.setAadharId(rs.getString("aadhar_id"));
 						savedFarmer.setFarmerId(rs.getString("farmer_id"));
@@ -209,6 +216,37 @@ public class FarmerServiceImpl implements FarmerService {
 			throw new RuntimeException("Exception : "+e);
 		}
 
+	}
+
+	@Override
+	public List<Dictionary> listSanch(int userId) {
+
+		List<Dictionary> sanchList = null;
+		String sql = "";
+
+		try {
+
+			sql = " select id, name_en, name_mh from sanch "
+					+ " where user_id = '"+userId+"'";
+
+			sanchList = jdbcTemplate.query(sql, new RowMapper<Dictionary>() {
+				@Override
+				public Dictionary mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+					Dictionary savedSanch = new Dictionary();
+					savedSanch.setIntKey(rs.getInt("id"));
+					savedSanch.setStringValue(rs.getString("name_en"));
+					savedSanch.setStringValue2(rs.getString("name_mh"));
+
+					return savedSanch;
+				}
+			});
+
+		}catch(Exception e) {
+			throw new RuntimeException("Exception : "+e);
+		}
+
+		return sanchList;
 	}
 
 }

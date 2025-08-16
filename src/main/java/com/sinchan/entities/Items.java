@@ -1,6 +1,5 @@
 package com.sinchan.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -13,9 +12,13 @@ public class Items {
 
     private int categoryId;
 
-    private String categoryName;
+    private String categoryNameEn;
 
-    private String itemName;
+    private String categoryNameMh;
+
+    private String itemNameEn;
+
+    private String itemNameMh;
 
     private String measurementType;
 

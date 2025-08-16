@@ -9,11 +9,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.sinchan.entities.District;
-import com.sinchan.entities.Farmer;
 import com.sinchan.entities.Tehsil;
 import com.sinchan.services.LocationServices;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Repository
 public class LocationServicesImpls implements LocationServices {
@@ -39,7 +36,7 @@ public class LocationServicesImpls implements LocationServices {
 					
 					District savedDistrict = new District();
 					savedDistrict.setDistrictId(rs.getInt("district_id"));
-					savedDistrict.setDistrictName(rs.getString("district_name"));
+					savedDistrict.setDistrictNameEn(rs.getString("district_name_en"));
 					
 					return savedDistrict;
 				}
@@ -68,8 +65,8 @@ public class LocationServicesImpls implements LocationServices {
 					
 					Tehsil savedTehsil = new Tehsil();
 					savedTehsil.setDistrictId(rs.getInt("district_id"));
-					savedTehsil.setTalukaId(rs.getInt("tehsil_id"));
-					savedTehsil.setTalukaName(rs.getString("tehsil_name"));
+					savedTehsil.setTehsilId(rs.getInt("tehsil_id"));
+					savedTehsil.setTehsilNameEn(rs.getString("tehsil_name_en"));
 					
 					return savedTehsil;
 				}

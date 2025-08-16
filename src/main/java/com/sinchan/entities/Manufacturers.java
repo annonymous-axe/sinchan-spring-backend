@@ -7,7 +7,9 @@ public class Manufacturers {
 
 	private int id;
 	
-	private String name;
+	private String nameEn;
+
+	private String nameMh;
 	
 
 }
