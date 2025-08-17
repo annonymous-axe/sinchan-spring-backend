@@ -34,6 +34,8 @@ public class POServiceImpl implements POService{
 
         int id = getNextSeq(userId);
 
+        updateItem(purchaseOrder, userId);
+
         try {
 
             String sql = "  insert into purchase_orders(id, user_id, po_number, supplier_name, purchase_date, bill_number) "
@@ -43,8 +45,6 @@ public class POServiceImpl implements POService{
             					purchaseOrder.getPurchaseDate(),purchaseOrder.getBillNumber());
 
             savePurchaseOrderItemDetails(purchaseOrder, id, userId);
-
-            updateItem(purchaseOrder, userId);
 
         }catch(Exception e) {
             throw new RuntimeException("Exception : "+e);

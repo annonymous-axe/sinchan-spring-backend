@@ -2,10 +2,12 @@ package com.sinchan.restControllers;
 
 import com.sinchan.entities.Invoice;
 import com.sinchan.entities.PurchaseOrder;
+import com.sinchan.entities.PurchaseOrderItems;
 import com.sinchan.entities.User;
 import com.sinchan.services.InvoiceService;
 import com.sinchan.services.POService;
 import com.sinchan.user.credentials.SinchanAuthToken;
+import com.sinchan.utility.LabelValService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +18,11 @@ import java.util.List;
 public class PurchaseRestController {
 
     private final POService poService;
+    private final LabelValService lblValService;
 
-    public PurchaseRestController(POService poService){
+    public PurchaseRestController(POService poService, LabelValService lblValService){
         this.poService = poService;
+        this.lblValService = lblValService;
     }
 
     @GetMapping("purchase/list")
@@ -34,6 +38,11 @@ public class PurchaseRestController {
     @PostMapping("purchase")
     public void savePurchase(@RequestBody PurchaseOrder purchaseOrder){
 
+        System.out.println("po number : "+purchaseOrder.getPoNumber());
+        System.out.println("supplierName :" +purchaseOrder.getSupplierNameEn());
+        System.out.println("purchase date : "+purchaseOrder.getPurchaseDate());
+        System.out.println("bill number: "+purchaseOrder.getBillNumber());
+
 		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
 
 		User user = authToken.getUser();
@@ -48,6 +57,11 @@ public class PurchaseRestController {
 
 		User user = authToken.getUser();
 
-        return poService.findById(purchaseOrderId, user.getUserId());
+        PurchaseOrder purchaseOrder = poService.findById(purchaseOrderId, user.getUserId());
+        for(PurchaseOrderItems item: purchaseOrder.getPurchaseOrderItemsList()){
+            item.setItemLblValList(lblValService.getItemFromCategoryLabelValItemList(item.getCategoryId(), user.getUserId()));
+        }
+
+        return purchaseOrder;
     }
 }

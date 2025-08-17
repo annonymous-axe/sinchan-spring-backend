@@ -191,7 +191,7 @@ public class PDFGeneratorService {
         
         startY -= 15;
         
-        String[] addressLines = invoice.getAddress().split("\n");
+        String[] addressLines = invoice.getAddress()!=null?invoice.getAddress().split("\n"):new String[]{""};
         
     	contentStream.beginText();
 		contentStream.newLineAtOffset(40, startY);

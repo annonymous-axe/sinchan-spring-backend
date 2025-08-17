@@ -43,6 +43,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 		
 		invoice.setGrandTotal(total);
 
+        updateItem(invoice, userId);
+
         try {
 
             String sql = " insert into invoice(id, user_id, farmer, email, phone, "
@@ -57,8 +59,6 @@ public class InvoiceServiceImpl implements InvoiceService {
             					invoice.getAadharId(), invoice.getFarmerId());
 
             saveInvoiceItemDetails(invoice, id, userId);
-
-            updateItem(invoice, userId);
 
         }catch(Exception e) {
             throw new RuntimeException("Exception : "+e);

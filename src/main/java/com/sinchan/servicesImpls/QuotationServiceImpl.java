@@ -101,8 +101,13 @@ public class QuotationServiceImpl implements InvoiceService {
 
 		try {
 
-			String sql = " select id, farmer, phone, grand_total from quotation "
-					+ " where farmer = "+farmerId+" and  user_id = '"+userId+"'";
+			String sql = " select quot.id, quot.farmer, quot.phone, quot.grand_total, farmer.farmer_name_en as farmer_name_en, "
+					+ " farmer.farmer_name_mh as farmer_name_mh from quotation quot "
+					+ " left join farmers farmer on farmer.id = quot.farmer "
+					+ " where inv.user_id = '"+userId+"'";
+
+//			String sql = " select id, farmer, phone, grand_total from quotation "
+//					+ " where farmer = "+farmerId+" and  user_id = '"+userId+"'";
 
 			listInvoice = jdbcTemplate.query(sql, new RowMapper<Invoice>() {
 				@Override
@@ -110,7 +115,8 @@ public class QuotationServiceImpl implements InvoiceService {
 
 					Invoice savedInvoice = new Invoice();
 					savedInvoice.setId(rs.getInt("id"));
-					savedInvoice.setFarmer(rs.getInt("farmer"));
+					savedInvoice.setFarmerNameEn(rs.getString("farmer_name_en"));
+					savedInvoice.setFarmerNameMh(rs.getString("farmer_name_mh"));
 					savedInvoice.setContactNo(rs.getString("phone"));
 					savedInvoice.setGrandTotal(rs.getFloat("grand_total"));
 
@@ -149,10 +155,10 @@ public class QuotationServiceImpl implements InvoiceService {
 
 		try {
 
-
-			String sql = " select quot.*, dist.district_name, tehsil.tehsil_name from quotation quot "
+			String sql = " select quot.*, farmer.farmer_name_en, dist.district_name_en, tehsil.tehsil_name_en from quotation quot "
 					+ " left join districts dist on dist.district_id = quot.district_id "
 					+ " left join tehsils tehsil on tehsil.tehsil_id = quot.tehsil_id "
+					+ " left join farmers farmer on farmer.id = quot.farmer "
 					+ " where quot.id = '"+id+"'"
 					+ " and quot.user_id = '"+userId+"'";
 
@@ -166,6 +172,7 @@ public class QuotationServiceImpl implements InvoiceService {
 
 						savedInvoice.setId(id);
 						savedInvoice.setFarmer(rs.getInt("farmer"));
+						savedInvoice.setFarmerNameEn(rs.getString("farmer_name_en"));
 						savedInvoice.setEmail(rs.getString("email"));
 						savedInvoice.setContactNo(rs.getString("phone"));
 						savedInvoice.setAddress(rs.getString("address"));
@@ -177,8 +184,8 @@ public class QuotationServiceImpl implements InvoiceService {
 						savedInvoice.setAadharId(rs.getString("aadhar_id"));
 						savedInvoice.setFarmerId(rs.getString("farmer_id"));
 						savedInvoice.setCreatedAt(rs.getDate("created_at"));
-						savedInvoice.setDistrictName(rs.getString("district_name"));
-						savedInvoice.setTehsilName(rs.getString("tehsil_name"));
+						savedInvoice.setDistrictName(rs.getString("district_name_en"));
+						savedInvoice.setTehsilName(rs.getString("tehsil_name_en"));
 
 						savedInvoice.setInvoiceItemList(listInvoiceItemDetails(savedInvoice.getId(), userId));
 					}
@@ -201,8 +208,13 @@ public class QuotationServiceImpl implements InvoiceService {
 
 		try {
 
-			String sql = " select id, farmer, phone, grand_total from quotation "
-					+ " where user_id = '"+userId+"'";
+			String sql = " select quot.id, quot.farmer, quot.phone, quot.grand_total, farmer.farmer_name_en as farmer_name_en, "
+					+ " farmer.farmer_name_mh as farmer_name_mh from quotation quot "
+					+ " left join farmers farmer on farmer.id = quot.farmer "
+					+ " where quot.user_id = '"+userId+"'";
+
+//			String sql = " select id, farmer, phone, grand_total from quotation "
+//					+ " where farmer = "+farmerId+" and  user_id = '"+userId+"'";
 
 			listInvoice = jdbcTemplate.query(sql, new RowMapper<Invoice>() {
 				@Override
@@ -210,7 +222,8 @@ public class QuotationServiceImpl implements InvoiceService {
 
 					Invoice savedInvoice = new Invoice();
 					savedInvoice.setId(rs.getInt("id"));
-					savedInvoice.setFarmer(rs.getInt("farmer"));
+					savedInvoice.setFarmerNameEn(rs.getString("farmer_name_en"));
+					savedInvoice.setFarmerNameMh(rs.getString("farmer_name_mh"));
 					savedInvoice.setContactNo(rs.getString("phone"));
 					savedInvoice.setGrandTotal(rs.getFloat("grand_total"));
 
@@ -311,9 +324,11 @@ public class QuotationServiceImpl implements InvoiceService {
 
 		try {
 
-			String sql = "  select distinct inv_item.*, item.name as item_name, cat.name as category_name from invoice_items inv_item "
+			String sql = "  select distinct inv_item.*, unit.name_en as unit_en, item.name_en as item_name_en, cat.name_en as category_name_en "
+					+ " from invoice_items inv_item "
 					+ " left join items item on item.id = inv_item.item_id "
 					+ " left join categories cat on cat.id = inv_item.category_id "
+					+ " left join units unit on unit.id = inv_item.unit "
 					+ " where inv_item.quotation_id = "+invoiceId+" and inv_item.user_id = "+userId;
 
 			listInvoiceItemDetails = jdbcTemplate.query(sql, new RowMapper<InvoiceItems>() {
@@ -325,13 +340,13 @@ public class QuotationServiceImpl implements InvoiceService {
 					savedInvoiceItems.setInvoiceId(invoiceId);
 					savedInvoiceItems.setItemId(rs.getInt("item_id"));
 					savedInvoiceItems.setCategoryId(rs.getInt("category_id"));
-					savedInvoiceItems.setUnit(rs.getString("unit"));
+					savedInvoiceItems.setUnit(rs.getString("unit_en"));
 					savedInvoiceItems.setRate(rs.getFloat("rate"));
 					savedInvoiceItems.setQuantity(rs.getInt("quantity"));
 					savedInvoiceItems.setCmlNumber(rs.getString("cml_number"));
 					savedInvoiceItems.setTotal(rs.getFloat("total"));
-					savedInvoiceItems.setItemName(rs.getString("item_name"));
-					savedInvoiceItems.setCategoryName(rs.getString("category_name"));
+					savedInvoiceItems.setItemName(rs.getString("item_name_en"));
+					savedInvoiceItems.setCategoryName(rs.getString("category_name_en"));
 
 					return savedInvoiceItems;
 				}

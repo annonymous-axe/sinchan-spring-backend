@@ -214,7 +214,7 @@ public class LabelValService {
 	public List<Dictionary> getItemFromCategoryLabelValList(int categoryId, int userId) {
         log.info("Entering getItemFromCategoryLabelValList.");
 
-        List<Dictionary> dictionaryList = null;
+        List<Dictionary> dictionaryList = List.of();
         log.info("userId : "+userId);
 
         try {

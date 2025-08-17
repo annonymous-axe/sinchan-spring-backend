@@ -40,12 +40,12 @@ public class QuotationRestController {
     }
 
     @GetMapping("quotation")
-    public Invoice openQuotation(@RequestParam int invoiceId){
+    public Invoice openQuotation(@RequestParam int quotationId){
 
 		SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
 
 		User user = authToken.getUser();
 
-        return invoiceService.findById(invoiceId, user.getUserId());
+        return invoiceService.findById(quotationId, user.getUserId());
     }
 }
