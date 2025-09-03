@@ -38,11 +38,11 @@ public class POServiceImpl implements POService{
 
         try {
 
-            String sql = "  insert into purchase_orders(id, user_id, po_number, supplier_name, purchase_date, bill_number) "
-                    + " values(?, ?, ?, ?, ?, ?) ";
+            String sql = "  insert into purchase_orders(id, user_id, po_number, supplier_name_en, supplier_name_mr, purchase_date, bill_number) "
+                    + " values(?, ?, ?, ?, ?, ?, ?) ";
 
             jdbcTemplate.update(sql, id, userId, purchaseOrder.getPoNumber(), purchaseOrder.getSupplierNameEn(),
-            					purchaseOrder.getPurchaseDate(),purchaseOrder.getBillNumber());
+                    purchaseOrder.getSupplierNameMr(), purchaseOrder.getPurchaseDate(),purchaseOrder.getBillNumber());
 
             savePurchaseOrderItemDetails(purchaseOrder, id, userId);
 
@@ -57,12 +57,12 @@ public class POServiceImpl implements POService{
 
         try {
 
-            String sql = "update table purchase_orders set po_number = ?, supplier_name = ?, "
+            String sql = "update table purchase_orders set po_number = ?, supplier_name_en = ?, supplier_name_mr = ?, "
             		+ " purchase_date = ?, bill_number = ? "
                     + " where id = "+purchaseOrder.getId()+"and user_id = "+userId;
 
-            jdbcTemplate.update(sql, purchaseOrder.getId(), userId, purchaseOrder.getPoNumber(), purchaseOrder.getSupplierNameEn(), purchaseOrder.getPurchaseDate(),
-                                purchaseOrder.getBillNumber());
+            jdbcTemplate.update(sql, purchaseOrder.getId(), userId, purchaseOrder.getPoNumber(), purchaseOrder.getSupplierNameEn(),
+                    purchaseOrder.getSupplierNameMr(),  purchaseOrder.getPurchaseDate(), purchaseOrder.getBillNumber());
 
             savePurchaseOrderItemDetails(purchaseOrder, purchaseOrder.getId(), userId);
 
@@ -95,7 +95,8 @@ public class POServiceImpl implements POService{
 
                         savedPurchaseOrder.setId(id);
                         savedPurchaseOrder.setPoNumber(rs.getString("po_number"));
-                        savedPurchaseOrder.setSupplierNameEn(rs.getString("supplier_name"));
+                        savedPurchaseOrder.setSupplierNameEn(rs.getString("supplier_name_en"));
+                        savedPurchaseOrder.setSupplierNameMr(rs.getString("supplier_name_mr"));
                         savedPurchaseOrder.setPurchaseDate(rs.getDate("purchase_date"));
                         savedPurchaseOrder.setBillNumber(rs.getString("bill_number"));
                         savedPurchaseOrder.setCreatedAt(rs.getDate("created_at"));
@@ -120,7 +121,7 @@ public class POServiceImpl implements POService{
 
         try {
 
-            String sql = " select id, po_number, supplier_name, purchase_date, bill_number from purchase_orders "
+            String sql = " select id, po_number, supplier_name_en, supplier_name_mr, purchase_date, bill_number from purchase_orders "
                     + " where user_id = '"+userId+"'";
 
             itemsList = jdbcTemplate.query(sql, new RowMapper<PurchaseOrder>() {
@@ -130,7 +131,8 @@ public class POServiceImpl implements POService{
                     PurchaseOrder savedPurchaseOrder = new PurchaseOrder();
                     savedPurchaseOrder.setId(rs.getInt("id"));
                     savedPurchaseOrder.setPoNumber(rs.getString("po_number"));
-                    savedPurchaseOrder.setSupplierNameEn(rs.getString("supplier_name"));
+                    savedPurchaseOrder.setSupplierNameEn(rs.getString("supplier_name_en"));
+                    savedPurchaseOrder.setSupplierNameMr(rs.getString("supplier_name_mr"));
                     savedPurchaseOrder.setPurchaseDate(rs.getDate("purchase_date"));
                     savedPurchaseOrder.setBillNumber(rs.getString("bill_number"));
 

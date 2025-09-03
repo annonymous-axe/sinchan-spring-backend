@@ -35,18 +35,4 @@ public class ForApplicationLogs {
 //
 //    }
 
-    @AfterThrowing(
-            pointcut = "com.sinchan.aops.AllPointCuts.forControllers() || com.sinchan.aops.AllPointCuts.forServices()",
-            throwing = "exception"
-    )
-    public String showErrorScreen(JoinPoint joinPoint, Throwable exception){
-
-        log.info("Exception  : "+exception.getMessage());
-
-        log.info("Exception  : "+exception.getCause());
-
-        return "pages/error";
-
-    }
-
 }

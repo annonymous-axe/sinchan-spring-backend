@@ -323,7 +323,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         try {
 
-            String sql = " select distinct inv_item.*, item.name_en as item_name_en, cat.name_en as category_name_en from invoice_items inv_item "
+            String sql = " select distinct inv_item.*, item.name_en as item_name_en, item.name_mh as item_name_mr, "
+                    + " cat.name_en as category_name_en, cat.name_mh as category_name_mr from invoice_items inv_item  "
                     + " left join items item on item.id = inv_item.item_id "
                     + " left join categories cat on cat.id = inv_item.category_id "
                     + " where inv_item.invoice_id = "+invoiceId+" and inv_item.user_id = "+userId;
@@ -342,8 +343,10 @@ public class InvoiceServiceImpl implements InvoiceService {
                 	savedInvoiceItems.setQuantity(rs.getInt("quantity"));
                 	savedInvoiceItems.setCmlNumber(rs.getString("cml_number"));
                 	savedInvoiceItems.setTotal(rs.getFloat("total"));
-                    savedInvoiceItems.setItemName(rs.getString("item_name_en"));
-                    savedInvoiceItems.setCategoryName(rs.getString("category_name_en"));
+                    savedInvoiceItems.setItemNameEn(rs.getString("item_name_en"));
+                    savedInvoiceItems.setItemNameMr(rs.getString("item_name_mr"));
+                    savedInvoiceItems.setCategoryNameEn(rs.getString("category_name_en"));
+                    savedInvoiceItems.setCategoryNameMr(rs.getString("category_name_mr"));
 
                     return savedInvoiceItems;
                 }

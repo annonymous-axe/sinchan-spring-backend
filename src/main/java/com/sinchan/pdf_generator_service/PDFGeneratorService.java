@@ -163,7 +163,7 @@ public class PDFGeneratorService {
         contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 10);
         contentStream.beginText();
         contentStream.newLineAtOffset(startX, startY);
-        contentStream.showText("Proprieter Name : "+user.getFirstNameEn()+" "+user.getLastNameEn());
+        contentStream.showText("Proprieter Name : "+user.getFullNameEn());
         contentStream.endText();
         
         contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 10);
@@ -281,7 +281,7 @@ public class PDFGeneratorService {
         for(InvoiceItems invoiceItem : invoice.getInvoiceItemList()) {
         	String[] newItem = {
         		String.valueOf(i), 	
-        		(invoiceItem.getCategoryId()>0?invoiceItem.getCategoryName():"")+" "+(invoiceItem.getItemId()>0?invoiceItem.getItemName():""),
+        		(invoiceItem.getCategoryId()>0?invoiceItem.getCategoryNameEn():"")+" "+(invoiceItem.getItemId()>0?invoiceItem.getItemNameEn():""),
                 invoiceItem.getCmlNumber(), "", String.valueOf(invoiceItem.getQuantity()),
         		invoiceItem.getUnit(), String.valueOf(invoiceItem.getRate()), String.valueOf(invoiceItem.getTotal())
         	};

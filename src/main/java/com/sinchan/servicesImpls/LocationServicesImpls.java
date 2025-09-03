@@ -37,6 +37,7 @@ public class LocationServicesImpls implements LocationServices {
 					District savedDistrict = new District();
 					savedDistrict.setDistrictId(rs.getInt("district_id"));
 					savedDistrict.setDistrictNameEn(rs.getString("district_name_en"));
+					savedDistrict.setDistrictNameMh(rs.getString("district_name_mh"));
 					
 					return savedDistrict;
 				}

@@ -33,9 +33,4 @@ public class WebMCVCConfig implements WebMvcConfigurer{
         registry.addInterceptor(localeChangeInterceptor());
     }
 
-//    @Override
-//    public void addCorsMappings(CorsRegistry corsRegistry){
-//        corsRegistry.addMapping("/**");
-//    }
-
 }

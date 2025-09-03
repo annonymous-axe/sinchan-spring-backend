@@ -17,7 +17,7 @@ public class PurchaseOrder {
 
     private String supplierNameEn;
 
-    private String supplierNameMh;
+    private String supplierNameMr;
 
     private Date purchaseDate;
 

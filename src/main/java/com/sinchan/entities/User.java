@@ -14,16 +14,12 @@ public class User implements UserDetails {
 	private int userId;
 	
 	private String email;
-	
+
 	private String password;
 	
-	private String firstNameEn;
+	private String fullNameEn;
 
-	private String firstNameMh;
-	
-	private String lastNameEn;
-
-	private String lastNameMh;
+	private String fullNameMh;
 	
 	private String contactNumber;
 	
@@ -32,10 +28,14 @@ public class User implements UserDetails {
 	private String firmNameMh;
 	
 	private String gstNumber;
-	
+
 	private boolean active;
 	
-	private String address;
+	private String addressEn;
+
+	private String addressMh;
+
+	private String imageStr;
 
 	private List<SimpleGrantedAuthority> role;
 

@@ -252,7 +252,7 @@ public class LabelValService {
 
         try {
 
-            String sql = "  select id, name_en from items where category_id = '"+categoryId+"' and user_id = '"+userId+"'";
+            String sql = "  select id, name_en, name_mh from items where category_id = '"+categoryId+"' and user_id = '"+userId+"'";
             log.info("sql :: "+sql);
 
             dictionaryList = jdbcTemplate.query(sql, new RowMapper<Dictionary>() {
@@ -262,6 +262,7 @@ public class LabelValService {
                     Dictionary savedDictionary = new Dictionary();
                     savedDictionary.setIntKey(rs.getInt("id"));
                     savedDictionary.setStringValue(rs.getString("name_en"));
+                    savedDictionary.setStringValue2(rs.getString("name_mh"));
 
                     return savedDictionary;
                 }

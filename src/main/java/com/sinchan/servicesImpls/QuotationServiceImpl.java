@@ -155,7 +155,7 @@ public class QuotationServiceImpl implements InvoiceService {
 
 		try {
 
-			String sql = " select quot.*, farmer.farmer_name_en, dist.district_name_en, tehsil.tehsil_name_en from quotation quot "
+			String sql = " select quot.*, farmer.farmer_name_en, farmer.farmer_name_mh, dist.district_name_en, tehsil.tehsil_name_en from quotation quot "
 					+ " left join districts dist on dist.district_id = quot.district_id "
 					+ " left join tehsils tehsil on tehsil.tehsil_id = quot.tehsil_id "
 					+ " left join farmers farmer on farmer.id = quot.farmer "
@@ -173,6 +173,7 @@ public class QuotationServiceImpl implements InvoiceService {
 						savedInvoice.setId(id);
 						savedInvoice.setFarmer(rs.getInt("farmer"));
 						savedInvoice.setFarmerNameEn(rs.getString("farmer_name_en"));
+						savedInvoice.setFarmerNameMh(rs.getString("farmer_name_mh"));
 						savedInvoice.setEmail(rs.getString("email"));
 						savedInvoice.setContactNo(rs.getString("phone"));
 						savedInvoice.setAddress(rs.getString("address"));
@@ -324,11 +325,11 @@ public class QuotationServiceImpl implements InvoiceService {
 
 		try {
 
-			String sql = "  select distinct inv_item.*, unit.name_en as unit_en, item.name_en as item_name_en, cat.name_en as category_name_en "
-					+ " from invoice_items inv_item "
+
+			String sql = " select distinct inv_item.*, item.name_en as item_name_en, item.name_mh as item_name_mr, "
+					+ " cat.name_en as category_name_en, cat.name_mh as category_name_mr from invoice_items inv_item  "
 					+ " left join items item on item.id = inv_item.item_id "
 					+ " left join categories cat on cat.id = inv_item.category_id "
-					+ " left join units unit on unit.id = inv_item.unit "
 					+ " where inv_item.quotation_id = "+invoiceId+" and inv_item.user_id = "+userId;
 
 			listInvoiceItemDetails = jdbcTemplate.query(sql, new RowMapper<InvoiceItems>() {
@@ -337,16 +338,18 @@ public class QuotationServiceImpl implements InvoiceService {
 
 					InvoiceItems savedInvoiceItems = new InvoiceItems();
 					savedInvoiceItems.setId(rs.getInt("id"));
-					savedInvoiceItems.setInvoiceId(invoiceId);
+					savedInvoiceItems.setQuotationId(invoiceId);
 					savedInvoiceItems.setItemId(rs.getInt("item_id"));
 					savedInvoiceItems.setCategoryId(rs.getInt("category_id"));
-					savedInvoiceItems.setUnit(rs.getString("unit_en"));
+					savedInvoiceItems.setUnit(rs.getString("unit"));
 					savedInvoiceItems.setRate(rs.getFloat("rate"));
 					savedInvoiceItems.setQuantity(rs.getInt("quantity"));
 					savedInvoiceItems.setCmlNumber(rs.getString("cml_number"));
 					savedInvoiceItems.setTotal(rs.getFloat("total"));
-					savedInvoiceItems.setItemName(rs.getString("item_name_en"));
-					savedInvoiceItems.setCategoryName(rs.getString("category_name_en"));
+					savedInvoiceItems.setItemNameEn(rs.getString("item_name_en"));
+					savedInvoiceItems.setItemNameMr(rs.getString("item_name_mr"));
+					savedInvoiceItems.setCategoryNameEn(rs.getString("category_name_en"));
+					savedInvoiceItems.setCategoryNameMr(rs.getString("category_name_mr"));
 
 					return savedInvoiceItems;
 				}

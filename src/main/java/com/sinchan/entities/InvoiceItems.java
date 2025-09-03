@@ -12,11 +12,15 @@ public class InvoiceItems {
 	
 	private int categoryId;
 
-	private String categoryName;
-	
+	private String categoryNameEn;
+
+	private String categoryNameMr;
+
 	private int itemId;
 
-	private String itemName;
+	private String itemNameEn;
+
+	private String itemNameMr;
 
 	private int quantity;
 	

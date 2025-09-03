@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sinchan.dao.UserDAO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,10 +46,9 @@ public class UserServiceImpl implements UserService {
 						savedUser.setUserId(rs.getInt("user_id"));
 						savedUser.setActive(rs.getBoolean("active"));
 						savedUser.setEmail(rs.getString("email"));
-						savedUser.setFirmNameEn(rs.getString("firm_name"));
-						savedUser.setFirstNameEn(rs.getString("first_name"));
-						savedUser.setLastNameEn(rs.getString("last_name"));
-						savedUser.setAddress(rs.getString("address"));
+						savedUser.setFirmNameEn(rs.getString("firm_name_en"));
+						savedUser.setFullNameEn(rs.getString("full_name_en"));
+						savedUser.setAddressEn(rs.getString("address_en"));
 						savedUser.setContactNumber(rs.getString("contact_number"));
 						savedUser.setGstNumber(rs.getString("gst_number"));
 					}
@@ -65,14 +65,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void update(User user) {
+	public void update(UserDAO user, int userId) {
 
 		try {
 
-			String sql = "  update users set address = ?, firm_name = ?, first_name = ?, last_name = ?, gst_number = ? "
-				+ " where user_id = "+user.getUserId();
+			String sql = "  update users set address_en = ?, firm_name_en = ?, full_name_en = ?, gst_number = ? "
+				+ " where user_id = "+userId;
 
-			jdbcTemplate.update(sql, user.getAddress(), user.getFirmNameEn(), user.getFirstNameEn(), user.getLastNameEn(), user.getGstNumber());
+			jdbcTemplate.update(sql, user.getAddressEn(), user.getFirmNameEn(), user.getFullNameEn(), user.getGstNumber());
 
 		}catch(Exception e) {
 			throw new RuntimeException("Exception : "+e);
@@ -82,13 +82,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void delete(User user) {
+	public void delete(UserDAO user, int userId) {
 
 		try {
 
 			String sql = " delete from users where user_id = ?";
 
-			jdbcTemplate.update(sql, user.getUserId());
+			jdbcTemplate.update(sql, userId);
 
 		}catch(Exception e) {
 			throw new RuntimeException("Exception : "+e);
@@ -98,8 +98,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
-		User user = new User();
 
 		try {
 
@@ -130,6 +128,47 @@ public class UserServiceImpl implements UserService {
 							}
 
 							user.setRole(roles);
+
+							return user;
+
+						}
+					}
+
+					throw new UsernameNotFoundException("User not found with given username.");
+
+				}
+			});
+
+		}catch(Exception e) {
+			throw new RuntimeException("Exception : "+e);
+		}
+	}
+
+	@Override
+	public UserDAO loadUserDAOByUsername(String email) throws UsernameNotFoundException {
+
+		try {
+
+			String sql = "select email, firm_name_en, full_name_en, address_en, contact_number, gst_number, active from users "
+					+ " where email = '"+email+"' ";
+
+			System.out.println("sql : "+sql);
+
+			return jdbcTemplate.query(sql, new ResultSetExtractor<UserDAO>() {
+				@Override
+				public UserDAO extractData(ResultSet rs) throws SQLException {
+
+					if(rs.next()) {
+
+						if(rs.getBoolean("active")){
+
+							UserDAO user = new UserDAO();
+							user.setEmail(rs.getString("email"));
+							user.setFirmNameEn(rs.getString("firm_name_en"));
+							user.setFullNameEn(rs.getString("full_name_en"));
+							user.setAddressEn(rs.getString("address_en"));
+							user.setGstNumber(rs.getString("gst_number"));
+							user.setContactNumber(rs.getString("contact_number"));
 
 							return user;
 
