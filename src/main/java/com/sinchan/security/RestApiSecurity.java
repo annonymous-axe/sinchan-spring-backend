@@ -47,6 +47,7 @@ public class RestApiSecurity {
 
         return httpSecurity.authorizeHttpRequests(authorized ->
                     authorized.requestMatchers("/login").permitAll()
+                            .requestMatchers("/images/**").permitAll()
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                             .anyRequest().authenticated()
                 )

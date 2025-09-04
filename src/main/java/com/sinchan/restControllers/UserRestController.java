@@ -11,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.io.IOException;
 
 @RestController
 public class UserRestController {
@@ -33,6 +32,7 @@ public class UserRestController {
             // saved image into created directory
             File savedFile = new File(uploadDir + userDao.getImage().getOriginalFilename());
             userDao.getImage().transferTo(savedFile);
+            userDao.setImageName(userDao.getImage().getOriginalFilename());
 
             System.out.println("Image saved success at location : "+savedFile.getAbsolutePath());
         }catch (Exception e){

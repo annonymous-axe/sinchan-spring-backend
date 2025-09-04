@@ -69,10 +69,10 @@ public class UserServiceImpl implements UserService {
 
 		try {
 
-			String sql = "  update users set address_en = ?, firm_name_en = ?, full_name_en = ?, gst_number = ? "
+			String sql = "  update users set address_en = ?, firm_name_en = ?, full_name_en = ?, gst_number = ?, firm_image = ? "
 				+ " where user_id = "+userId;
 
-			jdbcTemplate.update(sql, user.getAddressEn(), user.getFirmNameEn(), user.getFullNameEn(), user.getGstNumber());
+			jdbcTemplate.update(sql, user.getAddressEn(), user.getFirmNameEn(), user.getFullNameEn(), user.getGstNumber(), user.getImageName());
 
 		}catch(Exception e) {
 			throw new RuntimeException("Exception : "+e);
@@ -149,7 +149,8 @@ public class UserServiceImpl implements UserService {
 
 		try {
 
-			String sql = "select email, firm_name_en, full_name_en, address_en, contact_number, gst_number, active from users "
+			String sql = "select email, firm_name_en, full_name_en, address_en, contact_number, gst_number, active, firm_image "
+					+ " from users "
 					+ " where email = '"+email+"' ";
 
 			System.out.println("sql : "+sql);
@@ -169,6 +170,7 @@ public class UserServiceImpl implements UserService {
 							user.setAddressEn(rs.getString("address_en"));
 							user.setGstNumber(rs.getString("gst_number"));
 							user.setContactNumber(rs.getString("contact_number"));
+							user.setImageName(rs.getString("firm_image"));
 
 							return user;
 

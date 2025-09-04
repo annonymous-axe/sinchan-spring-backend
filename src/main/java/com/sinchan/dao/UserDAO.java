@@ -26,4 +26,6 @@ public class UserDAO {
 
     private MultipartFile image;
 
+    private String imageName;
+
 }
