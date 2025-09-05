@@ -1,5 +1,6 @@
 package com.sinchan.restControllers;
 
+import com.sinchan.dao.UserDAO;
 import com.sinchan.entities.District;
 import com.sinchan.entities.Invoice;
 import com.sinchan.entities.Tehsil;
@@ -73,8 +74,9 @@ public class AppServiceRestController {
             invoice = quotationService.findById(invoiceId, user.getUserId());
         }
 
+        UserDAO userDAO = userService.loadUserDAOByUsername(user.getEmail());
         if(invoice != null){
-            byte[] byteArraySource = pdfGeneratorService.generateInvoice(invoice, user);
+            byte[] byteArraySource = pdfGeneratorService.generateInvoice(invoice, userDAO);
             //Set PDF response header
             response.setContentType("application/pdf");
             response.setHeader("Content-Disposition","attachment; filename=\"invoice-report.pdf\"");

@@ -1,5 +1,6 @@
 package com.sinchan.pdf_generator_service;
 
+import com.sinchan.dao.UserDAO;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -9,6 +10,7 @@ import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +36,10 @@ public class PDFGeneratorService {
     private static final float BORDER_OFFSET = 1;
     private static PDFont hindiFont;
 
-    public byte[] generateInvoice(Invoice invoice, User user) throws IOException {
+    @Value("${app.upload.dir}")
+    private String uploadDir;
+
+    public byte[] generateInvoice(Invoice invoice, UserDAO user) throws IOException {
     	
     	PDDocument document = null;
     	byte[] byteArray = null;
@@ -63,7 +68,7 @@ public class PDFGeneratorService {
                     
                     try(PDPageContentStream contentStream = new PDPageContentStream(document, page)){
                     
-                    	drawImage(document, page, contentStream);
+                    	drawImage(document, page, contentStream, user);
 	                    // Draw static elements
                     	log.info("Draw static eleemnts.");
 	                    drawStaticElements(contentStream, page, invoice, user);
@@ -99,10 +104,12 @@ public class PDFGeneratorService {
         return byteArray;
     }
     
-    private void drawImage(PDDocument document, PDPage page, PDPageContentStream contentStream) throws IOException {
+    private void drawImage(PDDocument document, PDPage page, PDPageContentStream contentStream, UserDAO userDAO) throws IOException {
     	// Load logo image from resources
-    	PDImageXObject pdImage = PDImageXObject.createFromFile(
-    	        new ClassPathResource("static/images/logo.png").getFile().getAbsolutePath(), document);
+//    	PDImageXObject pdImage = PDImageXObject.createFromFile(
+//    	        new ClassPathResource("static/images/logo.png").getFile().getAbsolutePath(), document);
+
+        PDImageXObject pdImage = PDImageXObject.createFromFile(uploadDir+userDAO.getImageName(), document);
 
     	// Set the desired dimensions and position (top-right)
     	float imageWidth = 60;
@@ -113,7 +120,7 @@ public class PDFGeneratorService {
     	contentStream.drawImage(pdImage, imageX, imageY, imageWidth, imageHeight);    	
     }
 
-    private void drawStaticElements(PDPageContentStream contentStream, PDPage page, Invoice invoice, User user) throws IOException {
+    private void drawStaticElements(PDPageContentStream contentStream, PDPage page, Invoice invoice, UserDAO user) throws IOException {
     	
         float pageWidth = page.getMediaBox().getWidth();
         float pageHeight = page.getMediaBox().getHeight();
