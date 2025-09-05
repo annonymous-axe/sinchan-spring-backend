@@ -33,15 +33,9 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        System.out.println("Entering in filter.");
-
-//        System.out.println(""+request.get);
-
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
-
-        System.out.println("header : "+authHeader);
 
         if(authHeader != null && !authHeader.isBlank() && authHeader.startsWith("Bearer")) {
 
@@ -49,12 +43,9 @@ public class JWTFilter extends OncePerRequestFilter {
 
             username = jwtUtility.validateToken(token);
 
-            System.out.println("token : " + token);
         }
 
         if(username != null && !username.isBlank()){
-
-//            try{
 
             User userDetails = (User) userService.loadUserByUsername(username);
 
@@ -64,16 +55,9 @@ public class JWTFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
 
-//            }catch (JWTVerificationException exc){
-//                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Token");
-//            }
         }
 
         filterChain.doFilter(request, response);
-
-        System.out.println("Exiting filter.");
-
-
 
     }
 }

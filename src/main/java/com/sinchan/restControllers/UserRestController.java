@@ -51,7 +51,6 @@ public class UserRestController {
 
         SinchanAuthToken authToken = (SinchanAuthToken) SecurityContextHolder.getContext().getAuthentication();
 
-        System.out.println("getting user for : "+authToken.getName());
         UserDAO userDAO = userService.loadUserDAOByUsername(authToken.getName());
 
         return userDAO;
